@@ -99,4 +99,51 @@ VALUES
     ('São Paulo', 'SP', 'Sudeste', 45.10),
     ('Sergipe', 'SE', 'Nordeste', 2.29),
     ('Tocantins', 'TO', 'Norte', 1.55);
--- 
+-- Agora a respeito de consultas SQL, temos a classica e polemica select *.
+-- Essa consulta retorna todos os dados da tabela sem excecao e justamente
+-- por isso pode ser um problema em tabelas grandes, podendo ate mesmo
+-- dar problema no servidor de banco de dados, ou inutilizar o acesso ao
+-- banco de dados por algum tempo, cuidado com isso. Porem a sintaxe do
+-- Select eh a seguinte, EXEMPLO: SELECT <COLUNA1>,<COLUNA2> FROM <TABELA> 
+select * from estados;
+-- Agora vamos aos filtros, que inclusive deve ser feito em ambientes de producao.
+-- no caso abaixo usamos SELECT <O CAMPO QUE QUEREMOS> FROM ESTADO;
+select nome, sigla from estados;
+--Tambem podemos mudar a forma com que vai ser exibido.
+-- o as ele define como que sera a saida, no caso abaixo ao inves
+-- de exibir o nome da coluna como nome, sera exibido como Estado Nome,
+-- e sendo a segunda coluna como Abreviacao, isso sera feito apenas
+-- na visualizacao, sem alterar a estrutura da tabela. Sintaxe:
+-- SELECT <COLUNA> AS '<APELIDO DENTRO DE ASPAS>' FROM <TABELA>;
+-- O mesmo sera exibido da esquerda a direita na ordem informado.
+select nome as 'Estado Nome', sigla as 'Abrevicao' from estados;
+-- Outro exemplo para ordernar dados.
+-- a Clausura order by serve para para definir qual sera a coluna de referencia
+-- No caso a coluna sera nome, como nome eh string, a ordem sera alfabetica, mas
+-- se fosse numero seria do mais para o menor e se fosse algum dado que se repetisse
+-- seriam agrupados justamente com base nesse atributo abaixo. 
+select * from estados order by nome;
+-- o desc ao final de uma clausura order by inverte a logica da mesma, 
+-- nesse caso esta sendo pego os Estados, sendo ordenado dai maior populacao a menor.
+-- assim como voce pode colocar o desc, voce pode colocar o asc que eh por padrao.
+-- asc => segue a logica normal do order by, desc => inverte a logica.
+select * from estados order by populacao desc;
+-- Abaixo temos a clausura where, a mesma retorna com base no tipo de dado que
+-- a tupla tem. Nesse caso todas as tuplas que atendam a igualdade abaixo, sao exibidas.
+-- Sintaxe: SELECT * FROM <TABELA> WHERE <ATRIBUTO> = <VALOR>
+select * from estados where regiao = 'Sul';
+-- Where caso o atributo regiao nao seja Sul.
+select * from estados where regiao != 'Sul';
+-- abaixo caso o ID seja maior que 3.
+select * from estados where id > 3;
+-- Abaixo caso seja menor ou igual a 3. Lembrando que:
+-- o menor igual ou o maior igual, sempre incluir o numero informado.
+select * from estados where id <= 3;
+-- o like eh usado para strings, ou seja que contenha 'or' 
+-- no meio do atributo String, like eh case insensetive.
+select * from estados where regiao like '%or%';
+-- Caso a regiao comece com a letra S.
+select * from estados where regiao like 'S%';
+-- caso a regiao termine com a letra e.
+select * from estados where regiao like '%e';
+
