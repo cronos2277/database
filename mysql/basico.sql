@@ -1,7 +1,14 @@
 
 -- <= comentario no  MYSQL, ; separa uma instrucao da outra, sendo opcional caso tenha
 -- uma instrucao individual, mas apenas nesse caso em especifico.
-
+-- Sobre Esquemas no MYSQL
+--com esse comando voce cria um banco de dados, CREATE DATABASE <NOME> OU CREATE SCHEMA <NOME>
+create database banco;
+create database vm;
+--Com esse voce exclui, DROP DATABASE <NOME> OU DROP SCHEMA <NOME>
+drop database banco;
+-- Especificamente no MYSQL nao existe diferenca entre SCHEMA e DATABASE.
+-- Esse banco de dados visa performace e nao quantidade de recursos, diferente dos outros, mais robustos.
 -- Com esse comando voce pode selecionar o banco de dados que deseja utilizar via cli.
 use wm;
 -- Criando a tabela estado Comentario
@@ -92,3 +99,4 @@ VALUES
     ('São Paulo', 'SP', 'Sudeste', 45.10),
     ('Sergipe', 'SE', 'Nordeste', 2.29),
     ('Tocantins', 'TO', 'Norte', 1.55);
+-- 
