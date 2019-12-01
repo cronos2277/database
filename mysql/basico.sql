@@ -1,3 +1,9 @@
+
+-- <= comentario no  MYSQL, ; separa uma instrucao da outra, sendo opcional caso tenha
+-- uma instrucao individual, mas apenas nesse caso em especifico.
+
+-- Com esse comando voce pode selecionar o banco de dados que deseja utilizar via cli.
+use wm;
 -- Criando a tabela estado Comentario
 -- Para criar uma tabela precisa da palavra create e depois table.
 -- depois do create table abrimos os parenteses e colocamos dentro
@@ -33,6 +39,9 @@
 -- PRIMARY KEY(coluna) => Aqui informa qual coluna eh o ID.
 -- UNIQUE KEY(coluna) => Aqui voce informa qual campo nao aceita duplicidade,
 -- os valores informados aqui devem ser unicos.
+-- uso: CREATE TABLE <NOMETABELA>(coluna_nome1 TIPO e OPCOES, coluna_nome2 TIPO e OPCOES);
+-- Por padrao se usa maiusculo nos comandos, mas isso eh apenas convencao, pois o mesmo eh
+-- case insensitive, ao menos o MYSQL.
 create table estados (    
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL,
@@ -43,3 +52,15 @@ create table estados (
     UNIQUE KEY(nome),
     UNIQUE KEY(sigla)    
 );
+-- Aqui abaixo temos um exemplo do comando insert into. Sendo a sua sintaxe:
+-- INSERT INTO <TABELA> (CAMPOS) VALUES ('VALORES') => Apenas os valores com aspas, os campos nao.
+-- Voce tambem pode omitir na sintaxe os campos, caso voce coloque todos os valores e 
+-- sequencialmente os valores na ordem que foram criados no create table. Por exemplo:
+-- INSERT INTO <TABELA> VALUES (PRIMEIRO_ATTR,SEGUNDO_ATTR,ETC...); Essa seria a forma resumida.
+-- Com relacao a valores lembre-se sempre de por strings dentro de aspas.
+insert into estados(nome,sigla,regiao,populacao) values ('Acre','AC','NORTE',0.83);
+-- Exemplo da segunda sintaxe, repare que ai embaixo eu tive que incluir o ID:
+insert into estados values (2,'Alagoas','AL','NORDESTE',3.38);
+-- Voce tambem pode colocar mais de um valor por vez, mas use a virgula como separador:
+insert into estados(nome,sigla,regiao,populacao) values 
+('Amapa','AP','NORTE',0.8),('Amazonas','AM','NORTE',4.06);
