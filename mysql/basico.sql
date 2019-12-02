@@ -203,3 +203,41 @@ alter table nova drop novo;
 -- SINTAXE: DROP TABLE <TABELA> Esse comando eh um dos mais curtos do SQL,
 -- Porem altamente destrutivo se nao usado com cuidado.
 drop table nova;
+-- criando um novo banco de dados atraves do comando SCHEMA
+CREATE SCHEMA NOVO;
+-- agora deletando o banco de dados anteriormente criado.
+DROP SCHEMA NOVO;
+-- Sobre os comandos SQL
+-- DDL - Data Definition Language - Linguagem de Definição de Dados.
+-- São os comandos que interagem com os objetos do banco.
+-- São comandos DDL : CREATE, ALTER e DROP.
+-- Toda vez que for mexer na estrutura dos dados voce lida com DDL.
+-- Para DDL apenas existe 3 palavas, CREATE podendo ser create database ou table,
+-- Alter para alterar e o drop para excluir, no caso do DDL nao inclui comandos
+-- como insert ou delete, esse eh um macete para nao confundir aonde usar
+-- o create e o insert ou aonde usar o drop com o delete. Lembre-se, CREATE, DROP e ALTER
+-- Eh estrutura e nao dados.
+
+-- DML - Data Manipulation Language - Linguagem de Manipulação de Dados.
+-- São os comandos que interagem com os dados dentro das tabelas.
+-- São comandos DML : INSERT, DELETE e UPDATE, ou seja lida com dados e nao estrutura.
+
+-- DQL - Data Query Language - Linguagem de Consulta de dados.
+-- São os comandos de consulta.
+-- São comandos DQL : SELECT (é o comando de consulta)
+-- Aqui cabe um parenteses. Em alguns livros o SELECT fica na DML 
+-- em outros tem esse grupo próprio. Questionavel a existencia de um DQL,
+-- mas o SELECT eh um comando de consulta que nao altera em nada a Estrutura.
+-- DTL Data Transaction Language, complexo demais para tratar aqui, mas sao
+-- comandos referente a transacoes.
+-- DCL comandos referente a autorizacao, tambem complexo para ser abordado aqui.
+-- DTL e DCL Tera comandos algo a exemplos de uso parte pra eles.
+-- Um macete para memorizar isso:
+--    DML = "M" do meio vem de Manipulação. (lida com os dados)
+--    DDL = "D" do meio vem de Definição. (lida com a estrutura dos dados)
+--    DCL = "C" do meio vem de Controle. (abordarei nos exemplos de controle)
+--    DTL = "T" do meio vem de Transação. (abordarei nas transacoes)
+--    DQL = "Q" do meio vem de "Qonsulta". (Select, caso nao incluso no DML)
+
+
+
