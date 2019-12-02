@@ -123,8 +123,17 @@ desc empresas;
 insert into empresa_unidades (empresa_id,cidade_id,sede) 
 values (1,1,1), (1,2,0), (2,1,0), (2,2,1);
 
+-- No caso de or se apenas um for verdadeiro, o valor eh retornado. 
+select * from empresas where false or true;
+-- Unico caso aonde o or pode dar falso.
+select * from empresas where false or false;
 -- Aqui estamos usando a clausura AND, o and eh usado dentro do where,
 -- nesse caso apenas o resultado que se incluem em ambos sao retornados.
+select * from empresas where false and true;
+-- Unico caso aonde o where com o AND eh verdadeiro.
+select * from empresas where true or true;
+-- Aqui um exemplo de pesquisa envolvendo 3 tabelas, que no caso pode ser
+-- util em relacoes N pra N. Para isso usandos a clausura AND.
 select empresas.nome as 'EMPRESA', cidades.nome as "CIDADE" from empresas, empresa_unidades,
 cidades where empresas.id = empresa_unidades.empresa_id and 
 cidades.id = empresa_unidades.cidade_id and empresa_unidades.sede;
