@@ -97,3 +97,34 @@ select * from cidades right join prefeitos on cidades.id = prefeitos.cidade_id;
 select * from cidades left join prefeitos on cidades.id = prefeitos.cidade_id
 UNION
 select * from cidades right join prefeitos on cidades.id = prefeitos.cidade_id;
+create table if not exists empresas(
+    id int unsigned not null auto_increment,
+    nome varchar(255) not null,
+    cnpj int unsigned,
+    primary key (id),
+    unique key (cnpj)
+);
+-- o tinyint(1) no caso serve como uma especie de booleano, sendo 1 true e 0 false.
+-- 0 ou 1 sao os valores que esse tinyint aceita, ou seja 1 bit.
+-- Repare tambem que essa tabela eh feita de uma chave composta, pois tem duas
+-- chaves primarias, quando uma tabela tem duas chaves primarias, elas sao consideradas
+-- chaves compostas.
+create table if not exists empresa_unidades(
+    empresa_id int unsigned not null,
+    cidade_id int unsigned not null,
+    sede tinyint(1) not null,
+    primary key(empresa_id,cidade_id)
+);
+alter table empresas modify cnpj varchar(14);
+insert into empresas (nome,cnpj) values
+("Bradesco",1876598394839), ("Vale",89798786576),("Cielo",98239281298);
+-- Descreve os campos das tabelas.
+desc empresas;
+insert into empresa_unidades (empresa_id,cidade_id,sede) 
+values (1,1,1), (1,2,0), (2,1,0), (2,2,1);
+
+-- Aqui estamos usando a clausura AND, o and eh usado dentro do where,
+-- nesse caso apenas o resultado que se incluem em ambos sao retornados.
+select empresas.nome as 'EMPRESA', cidades.nome as "CIDADE" from empresas, empresa_unidades,
+cidades where empresas.id = empresa_unidades.empresa_id and 
+cidades.id = empresa_unidades.cidade_id and empresa_unidades.sede;
