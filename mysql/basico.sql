@@ -146,4 +146,60 @@ select * from estados where regiao like '%or%';
 select * from estados where regiao like 'S%';
 -- caso a regiao termine com a letra e.
 select * from estados where regiao like '%e';
-
+-- group by organiza em grupos, no caso abaixo essa query
+-- pega os primeiros valores do registro, mas nao todos.
+select * from estados group by regiao;
+-- No caso voce referencia o est como um estado, isso ajuda
+-- a evitar ambiguidades entre tabelas, por exemplo se tiver
+-- duas tabelas a tabela1 e a tabela2, porem as duas com um 
+-- mesmo campo, por exemplo tabela1 e tabela2 ambos tem o
+-- atributo dado, uma forma de se referenciar ao atributo dado
+-- especificamente da tabela2, seria voce colocar um alias ou
+-- fazer uma referencia direta, por exemplo:
+-- select tb2.dado from tabela1 as tb1, tabela2 as tb2; ou
+-- select tabela2.dado from tabela1,tabela2; Essa forma abaixo
+-- seria uma forma de evitar ambiguidades.
+select est.nome from estados as est;
+--Segunda forma de voce fazer isso eh seguindo a forma abaixo:
+select estados.nome from estados;
+-- Tambem eh possivel envolver o atributo dentro de crases, ou backtip.
+select `nome` from `estados`;
+-- contando o numero de elementos da tabela.
+--Sintaxe: SELECT COUNT(QUALQUER_ATRIBUTO_DA_TABELA) FROM <TABELA>;
+select count(id) from `estados`;
+-- somando valores, sintaxe: SELECT SUM(ATRIBUTO) FROM <TABELA>;
+select sum(populacao) from `estados`;
+-- Media Aritimetica, sintaxe SELECT AVG(POPULACAO) FROM <TABELA>;
+select avg(populacao) from estados;
+--Inserindo dados a ser atualizado e posteriormente excluido.
+INSERT INTO estados (nome, sigla, regiao, populacao) 
+VALUES ('teste','TR','Nordeste',0.90); 
+-- Updates e delete recomenda-se usar a clausura where, alguns clientes
+-- SQL evitam que seja dado esse comando sem essas clausuras.
+-- Comecando pelo UPDATE, sintaxe: UPDATE <TABELA> SET <COLUNA> = 'NOVO_VALOR';
+-- Esse comando acima vai atualizar todos os atributos da tabela com aquele valor.
+-- Por isso eh bom Evitar UPDATE e DELETE sem a clausura where.
+update `estados` set nome = "Valor Atualizado" where sigla = 'TR';  
+-- a consequencia do delete eh pior que o update, pois esse comando pode
+-- excluir a tabela inteira sem a clausura where, sintaxe basica:
+-- DELETE FROM <TABELA>;
+delete from `estados` where sigla = "TR";
+-- criando tabela para explicar como funciona o drop table e o alter colunm
+create table nova (id int primary key, valor varchar(30));
+insert into nova values(1,"Valor1"),(2,"Valor2"),(3,"Valor3"),(4,"Valor4");
+-- Inicialmente alterando estrutura de uma tabela.
+-- Esse comando abaixo adiciona uma nova coluna na tabela chamado novo.
+-- SINTAXE: ALTER TABLE <TABELA> ADD <NOME_DA_NOVA_COLUNA>, 
+-- nesse caso sera adicionado uma coluna com valores nulos.
+alter table nova add novo int;
+-- Esse comando altera a estrutura em uma coluna, 
+-- no caso a tabela foi alterada de inteiro para String.
+-- Sintaxe: ALTER TABELA <TABELA> MODIFY <COLUNA COM OS SEUS ATRIBUTOS>
+alter table nova modify novo varchar(30);
+-- Aqui apagada a coluna da tabela. No exemplo foi apagado a coluna criado acima.
+-- Sintaxe: ALTER TABLE <TABELA> DROP <COLUNA>;
+alter table nova drop novo;
+-- O comando abaixo apaga a tabela inteira.
+-- SINTAXE: DROP TABLE <TABELA> Esse comando eh um dos mais curtos do SQL,
+-- Porem altamente destrutivo se nao usado com cuidado.
+drop table nova;
