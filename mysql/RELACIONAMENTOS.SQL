@@ -34,5 +34,16 @@ create table if not exists teste(
 -- Aqui deleta a tabela caso nao exista, repare que a logica aqui eh invertida.
 -- Ou seja, se existir, apague a tabela.
 drop table if exists teste;
+-- Repare no id que eh colocado como valor do estado_id. Ali eh colocado 
+-- um resultado de um select. Tudo que voce precisa fazer eh, primeiro se
+-- certificar que o resultado do select eh apenas um valor e que esse valor
+-- eh compativel com o tipo de dados e depois envolver esse select dentro de
+-- parenteses. ficando por exemplo: 
+-- INSERT INTO <TABELA> (<COLUNA>) VALUES ((<UM SELECT DE RETORNA UM VALOR COMPATIVEL>));
+INSERT INTO `cidades` (NOME,ESTADO_ID,AREA)VALUES('CURITIBA',(SELECT ID FROM `estados` WHERE SIGLA = 'PR'),1030.32);
+INSERT INTO `cidades` (NOME,ESTADO_ID,AREA)VALUES('Niteroi',(SELECT ID FROM `estados` WHERE SIGLA = 'RJ'),133.9);
+INSERT INTO `cidades` (NOME,ESTADO_ID,AREA)VALUES('Campinas',(SELECT ID FROM `estados` WHERE SIGLA = 'SP'),795);
+INSERT INTO `cidades` (NOME,ESTADO_ID,AREA)VALUES('Caruaru',(SELECT ID FROM `estados` WHERE SIGLA = 'PE'),795);
+
 
 
