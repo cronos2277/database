@@ -1,11 +1,11 @@
 # MongoDB Comandos.
-show dbs; Exibe todos os bancos de dados do mongo db.
+<b>show dbs;</b> Exibe todos os bancos de dados do mongo db.
 
-help; Exibe a ajuda.
+<b>help;</b> Exibe a ajuda.
 
-use <Banco de dados>; ele seleciona um banco de dados. O mesmo pode ser selecionado sem existir, sendo criado assim que houver a criacao de alguma colecao.
+<b>use <Banco de dados>;</b> ele seleciona um banco de dados. O mesmo pode ser selecionado sem existir, sendo criado assim que houver a criacao de alguma colecao.
 
-show collections; Exibe todas as colecoes criadas.
+<b>show collections;</b> Exibe todas as colecoes criadas.
 
-cls; limpa a tela
+<b>cls;</b> limpa a tela
 
