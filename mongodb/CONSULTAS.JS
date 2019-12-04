@@ -64,5 +64,41 @@ db.exemplo.find(
     }
 )
 /*
-    Agreggate
+    O metodo aggregate ele permite voce fazer buscas customizadas.
+    O aggregate funciona no padrao pipe and filter, para mais informacoes:
+    https://www.devmedia.com.br/padrao-pipe-and-filter/29319
+    Resumidamente eh como funciona o grep no linux, basicamente voce pode
+    pegar o resultado de um processo como a entrada de dados de outro 
+    processo. Ou seja, voce faz uma busca e essa busca sera usada como base
+    para uma outra busca encadeada. No exemplo abaixo temos o $match que
+    vai retornar todos os registros que tem o atributo ordem com o valor 
+    igual a 2, depois voce tem o project que pega esse mesmo valor e remove
+    na busca o id. Ou seja quando esse registro aparecer na tela, a 
+    tupla foi consequencia do $match e a formatacao, que nesse caso removeu
+    o _id do resultado foi gracas ao $project. Voce pode conhecer melhor
+    os estagios acessando esse link:
+    https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+    No caso estamos usando 2 estagios o $match e o $project, existe varios
+    outros que pode ser acessado no link acima, podendo ou nao serem repetidos,
+    alem disso todos os estagios tem o '$' na frente sintaxe:
+    db.exemplo.aggregate(
+        [ <-- deve ser dentro de chaves, pois o mesmo trabalha com array.
+            { <-- dentro do array temos cada estagio organizado como objetos dentro de um array.
+                $match:{ordem:2} <- Estagio recebe um objeto como parametro, nesse caso filtros.
+            },
+            {
+                $project:{_id:0} <- no caso do project voce pode usar 1 para habilitar o campo.
+            }
+        ]
+    )    
 */
+db.exemplo.aggregate(
+    [
+        {
+            $match:{ordem:2}
+        },
+        {
+            $project:{_id:0}
+        }
+    ]
+)
