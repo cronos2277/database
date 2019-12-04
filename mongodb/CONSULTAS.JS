@@ -1,5 +1,3 @@
-find, findOne, skip(), limit(), busca and ou or dentro do find
-
 db.createCollection('exemplo')
 db.exemplo.insert({valor:"meu valor 1",ordem:1})
 db.exemplo.insert({valor:"meu valor 2",ordem:2})
@@ -9,6 +7,7 @@ db.exemplo.insert({valor:"meu valor 4",ordem:4})
     Aqui sao abordados os principais metodos de busca do Mongo DB.
     find(), quando nao tem parametros, ele retorna tudo.    
  */
+
 /*
     Voce pode passar parametros na sintaxe chave-valor como parametro do find,
     assim sendo, voce pode fazer busca customizada
@@ -37,3 +36,33 @@ db.exemplo.find().skip(3)
     db.<exemplo>.limit(O numero maximo de resultados a ser retornado)
 */
 db.exemplo.find().limit(3)
+/*
+    Voce pode usar a clausura 'or' dentro do metodo find, sendo:
+    db.exemplo.find(
+        {
+            $or ou $and:[{condicao1},{condicao2},{etc...}]
+        }
+    )
+    Por condicoes, entenda-se um objeto contendo uma chave com
+    o valor que voce deseja localizar.
+*/
+db.exemplo.find(
+    {
+        $or:[
+                {ordem:2},
+                {ordem:4}
+            ]
+    }
+)
+
+db.exemplo.find(
+    {
+        $and:[
+            {valor:"meu valor 4"},
+            {ordem:4}
+        ]
+    }
+)
+/*
+    Agreggate
+*/
