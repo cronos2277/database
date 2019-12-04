@@ -67,3 +67,17 @@ db.estados.insert({
     como o banco que voce selecionou anteriormente, esse eh o modo
     schemaless que o Mongo DB trabalha. 
 */
+db.estado.insert({value:"teste",chave:5})
+/*
+    Esse metodo abaixo remove um ou mais elementos, voce pode fazer isso passando
+    um objeto como filtro, assim como o find por exemplo e o(s) dado(s) que baterem
+    como o resultado encontrado, serao prontamente deletados.
+    Sintaxe: db.estado.remove(Filtro de busca)
+*/
+db.estado.remove({chave:5})
+/*
+    No caso do update se faz necessario se passar dois objetos, um sendo a selecao,
+    outro sendo o novo valor a ser atualizado. db.estado.update({Filtro de busca},{novo valor})
+    vale lembra que o valor retornado sera substituido pelo conteudo do segundo parametro.
+*/
+db.estado.update({chave:5},{value:"modificado",chave:1})
