@@ -1,12 +1,8 @@
 # MongoDB Comandos.
 <h3>show dbs</h3> Exibe todos os bancos de dados do mongo db.
-
 <h3>help</h3> Exibe a ajuda.
-
 <h3>use <Banco de dados></h3> ele seleciona um banco de dados. O mesmo pode ser selecionado sem existir, sendo criado assim que houver a criacao de alguma colecao.
-
 <h3>show collections</h3> Exibe todas as colecoes criadas.
-
 <h3>cls</h3> limpa a tela
 <br>
 <br><h2>Comandos caso problemas</h2><br>
