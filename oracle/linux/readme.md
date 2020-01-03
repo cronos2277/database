@@ -1,7 +1,7 @@
 <h1>Linux</h1>
 <h2>Arquivo "oracle-xe-18c"</h2>
 <p>Copie esse arquivo para o diretório '<b>/etc/init.d/</b>' <br>
-Depois execute o '<b>/etc/init.d/oracle-xe-18c configure</b>' para configurar</p><br>
+Depois execute o '<b>/etc/init.d/oracle-xe-18c configure</b>' para configurar</p>
 '<b>/etc/init.d/oracle-xe-18c start</b>' => Inicia o oracle DB. <br>
 '<b>/etc/init.d/oracle-xe-18c restart</b>' => Reinicia o oracle DB. <br>
 '<b>/etc/init.d/oracle-xe-18c stop</b>' => Para o oracle DB. <br>
