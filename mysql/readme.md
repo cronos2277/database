@@ -5,3 +5,5 @@
 [Relacionamentos](RELACIONAMENTOS.SQL) => Exemplos envolvendo JOINS.
 
 [View](VIEW.SQL) => Exemplos envolvendo View.
+
+[Procedures](PROCEDURES.SQL) => Aqui temos um exemplo de como funciona uma Procedure no MYSQL

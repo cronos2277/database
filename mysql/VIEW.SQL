@@ -113,3 +113,6 @@ DELETE FROM v_teste where codigo = 1;
 usamos a palavra reservada VIEW
 */
 DROP VIEW v_teste;
+
+/* Apagando esse banco de dados, exclua essa parte se quiser manter*/
+DROP DATABASE intermediario;
