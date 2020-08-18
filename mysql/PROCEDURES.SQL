@@ -84,12 +84,13 @@ END$
 
 /* Lembre-se sempre de chamar o procedimento atraves do CALL */
 CALL altera_valor(2,"novo valor")$
-DROP DATABASE procedures$
+
 
 /* 
     voce tambem pode apagar um procedimento usando um DROP PROCEDURE,
     lembre-se que aqui voce nao envoca o procedimento, logo sem (). 
 */
 DROP PROCEDURE cria_tabelas$
-
+/* Depois sera apagado a database e setado como delimitador o ";" denovo. */
+DROP DATABASE procedures$
 DELIMITER ;
