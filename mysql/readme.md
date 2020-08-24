@@ -9,3 +9,5 @@
 [Procedures](PROCEDURES.SQL) => Aqui temos um exemplo de como funciona uma Procedure no MYSQL
 
 [SubQueries](SUBQUERIES.SQL) => Aqui nos temos um exemplo de como funciona melhor uma Subquery.
+
+[Trigger](TRIGGER.SQL) => Aqui temos um exemplo de como funciona as Triggers.
