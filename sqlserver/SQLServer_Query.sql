@@ -69,4 +69,17 @@ go
 drop table endereco
 go
 
+/*
+	Eh possivel fazer conversao de dados no SQL Server.
+	O primeiro select abaixo se concatena ja o segundo soma,
+	com o cast voce pode mudar o tipó
+*/
+select '1' + '1'
+select cast('1' as INT) + cast('1' as INT)
 
+/*
+	Equivalente ao ifnull do mysql, no caso essa funcao
+	abaixo ao inves de projetar um valor "null", projeta
+	o valor passado como segundo parametro da String
+*/
+select isnull(null,'Valor Nulo')
