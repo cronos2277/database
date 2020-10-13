@@ -55,7 +55,9 @@ Procedimento não contém parenteses, por exemplo os procedimentos com a tabela 
 
 ## Importando dados de Arquivo Externo Bulk insert
 [exemplo de bulk insert](bulk-insert.sql)
+
 [Arquivo com dados](CONTAS.txt)
+
 ### Sintaxe
     BULK INSERT CONTAS FROM 'B:\CONTAS.txt'
     WITH
