@@ -30,6 +30,18 @@ As datas no SQL server funcionam parecido como outros banco de dados, podendo va
 
 `isnull(null,'Valor Nulo')` => Equivalente ao **ifnull** do *mysql*, aonde está num você deve colocar a coluna e caso haja algum valor nulo, ao invés de exibir **NULL** será exibido o valor que você digitar ali no segundo parametro.
 
+#### Projetando data no padrão Brasileiro
+[Exercicio](Exercicio%20data%20SQL-Server.sql)
+##### Montando a query
+    select cast(
+            day(aniversario) as varchar) + '/' 
+            + cast(month(aniversario) as varchar) + '/' 
+            + cast(year(aniversario) as varchar)
+    as 'Data de Aniversario' from exemplo_data
+    GO
+##### Explicando    
+No caso você pode projetar uma data usando a função cast, no caso a função `day`, `month`, `year` retornam valores inteiros, logo não tem como fazer uma operação com o `'/'`, logo se faz necessário converter a data para o mesmo tipo, no vaso um *varchar* por isso o `as varchar`.
+
 ## Procedimentos do Sistema
 `SP_Help [tabela]` => Mostra todas  as informações de `[tabela]`.
 
