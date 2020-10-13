@@ -30,6 +30,9 @@ As datas no SQL server funcionam parecido como outros banco de dados, podendo va
 
 `isnull(null,'Valor Nulo')` => Equivalente ao **ifnull** do *mysql*, aonde está num você deve colocar a coluna e caso haja algum valor nulo, ao invés de exibir **NULL** será exibido o valor que você digitar ali no segundo parametro.
 
+`CHARINDEX('[Oque]',[onde],[apartir de])` => Essa função procura uma determinado valor de dentro de uma string e retorna a posição, por exemplo: `CHARINDEX('a',nome)`, nesse exemplo será procurado pelo caracter `'a'`  dentro da coluna `nome`, no é retornado a primeira posição aonde foi encontrado, seria parecido com uma expressão regular, mas sem as flags global e multiline e apenas com a flag ignore case. Em resumo essa função no valor `Ana` por exemplo retornaria o valor **1**, uma vez que a primeira ocorrência dessa String está na posição 1, um outro exemplo seria a String `Joao`, nesse caso retornaria **3** devido a posição do que está sendo procurado. O terceito e ultimo parametro é opcional e informa apartir de qual posição deve ser efetuado a busca, por exemplo `CHARINDEX('a',nome,2)`, nesse caso na String `Ana` será retornado a posição **3**, que é a primeira ocorrência após a posição 2, lembrando que isso altera apenas a busca mas não o resultado, repare que a função, mesmo começando da posição **2**, considera a posição **1** no retorno do resultado, o que explica o valor **3** ao invés de **2**. 
+[Arquivo Exemplo](charindex.sql)
+
 #### Projetando data no padrão Brasileiro
 [Exercicio](Exercicio%20data%20SQL-Server.sql)
 ##### Montando a query
