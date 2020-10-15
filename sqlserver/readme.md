@@ -84,3 +84,69 @@ Aqui definimos o caracter separador de campos, no caso caso encontre o `\t` ou s
 #### ROWTERMINATOR
 `ROWTERMINATOR = '\n'` Aqui temos o separador de linha, no caso quando encontrar esse caracter, significa que o valor será uma nova linha na tabela, diferente do *FIELDTERMINATOR* que separa campos, esse separa linha, no caso o separador aqui é o `\n`, no caso o *Enter*
 
+## Trigger
+[Arquivo Exemplo](Trigger.sql)
+### Criando Trigger
+    --Trigger insercao
+    create trigger trg_originais_backup_insert
+    on dbo.dados_originais
+    FOR INSERT
+    AS
+        DECLARE @id smallint
+        DECLARE @valor varchar(30)
+        DECLARE @data datetime
+
+        SELECT @id = id from inserted
+        SELECT @valor = valor from inserted	
+        SET @data = getdate()
+
+        print 'Trigger de insercao executada!'
+        insert into dados_backup (fk,valor_novo,valor_antigo,criado) values (@id,@valor,@valor,@data)
+    GO
+
+#### create trigger trg_originais_backup_insert on dbo.dados_originais
+Para criar uma Trigger, você deve inicialmente começar com `create trigger trg_originais_backup_insert on dbo.`**Nome Da Sua Tabela**. No caso o `dbo` se refere ao schema, no caso o Schema deve ser informado na criação de uma trigger e caso não exista um schema no seu banco de dados você deve usar o `dbo` que é ou padrão, ou usar o Schema aonde se localiza a sua tabela. No SQL Server o Schema é uma divisão lógica uma trigger deve ter o comando de criação `create trigger` seguido do nome da trigger `trg_originais_backup_insert` e o seu local, no caso o namespace e o nome da tabela `on dbo.dados_originais`
+
+#### FOR AS AND GO
+Essa parte da trigger deve ser informado qual evento deve ser monitorado, no caso do exemplo acima [criando trigger](readme.md#criando-trigger), o evento que estpa sendo monitorado é o **INSERT** e o `AS` e o `GO` formam um bloco aonde deve conter toda a lógica da trigger.
+
+#### DECLARE
+Aqui você declara as variáveis, no caso você usa a palavra reservada `DECLARE` após um espaço você deve informar o nome da variável, colocando um **@** na frente dele e seguido do seu tipo, como nesse exemplo `DECLARE @id smallint`, ou seja: `DECLARE @VARIAVEL TYPE`.
+
+#### SELECT SET
+Ambos definem valores a variáveis criadas pelo `DECLARE`, no caso o `SELECT` recomenda-se uso quando o dado se originar de alguma tabela e o `SET` quando se originar de função, isso seria uma convenção no caso, repare aqui `id from inserted` o `from inserted` referencia uma tabela temporária do SQL Server, no caso quando você exclui dados ou atualiza, o dado é movido e fica lá por um tempo na tabela `deleted`, caso você precisa acessar o dado antigo, que estava na tabela antes de ser excuído ou alterado, a tabela a ser analizada é essa, já a `inserted`é aonde fica o novo dado, ou seja o dado a ser incluído, semelhante a Trigger no mysql nesse caso em específico. Na exclusão você tem a tabela temporária `deleted`, na inserção `inserted` e na atualização ambas as tabelas. Além disso você atribuir dados de funções também `SET @data = getdate()`, por convenção nesse caso recomenda-se o uso do `SET` ao invés do `SELECT` para deixar tudo mais organizado, de modo a saber qual dado vem de função ou de tabela.
+
+#### PRINT
+Aqui `print 'Trigger de insercao executada!'` executa uma impressão no console quando essa trigger é executada.
+
+#### Query na Trigger
+Uma vez que os dados estejam declarados e com os seus respectivos valores, você pode usar eles em uma query de inserção em outra tabela por exemplo: `insert into dados_backup (fk,valor_novo,valor_antigo,criado) values (@id,@valor,@valor,@data)`, nesse caso estamos simulando uma rotina de backup.
+
+### Excluíndo uma Trigger
+`drop trigger trg_originais_backup_insert `, o comando é simples, use o `drop trigger` **NOME_DA_TABELA**, ou seja as duas palavras reservadas `drop trigger`, espaço e o nome da sua tabela.
+
+### Atualização
+    create trigger trg_originais_backup_update
+    on dbo.dados_originais
+    FOR UPDATE AS
+    IF UPDATE(valor)
+    BEGIN
+        DECLARE @id smallint
+        DECLARE @novo_valor varchar(30)
+        DECLARE @antigo_valor varchar(30)			
+
+        SELECT @id = id from inserted
+        SELECT @novo_valor = valor from inserted
+        SELECT @antigo_valor = valor from deleted
+        
+
+        update dados_backup set valor_antigo = @antigo_valor where fk = @id
+        update dados_backup set valor_novo = @novo_valor where fk = @id
+        update dados_backup set ultima_mudanca = getdate() where fk = @id
+        print 'Trigger de atualizacao executada!'
+    END
+    GO
+
+#### IF UPDATE
+Esse `IF UPDATE` não é obrigatório em uma trigger de atualização, porém ele é necessário caso você queira monitorar apenas uma coluna, sem essa expressão, toda a tabela é monitorada, com essa expressão logo após o `FOR UPDATE AS`, você consegue monitorar um campo em específico, de modo que você poderia criar triggers exclusivas para campos de uma tabela. O campo que está sendo monitorado é o campo **valor**, o que explica o `IF UPDATE(valor)`. Esse comando é parte do **TSQL**, logo se faz necessário colocar ele dentro de um bloco `BEGIN` e `END`, sempre que for usar o **IF** a condição deve estar envolta desse bloco.
+
