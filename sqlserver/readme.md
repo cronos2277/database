@@ -87,7 +87,8 @@ Aqui definimos o caracter separador de campos, no caso caso encontre o `\t` ou s
 `ROWTERMINATOR = '\n'` Aqui temos o separador de linha, no caso quando encontrar esse caracter, significa que o valor será uma nova linha na tabela, diferente do *FIELDTERMINATOR* que separa campos, esse separa linha, no caso o separador aqui é o `\n`, no caso o *Enter*
 
 ## Trigger
-[Arquivo Exemplo](Trigger.sql)
+[Arquivo Exemplo 1](Trigger.sql)
+[Arquivo Exemplo 2](Trigger2.sql)
 ### Criando Trigger
     --Trigger insercao
     create trigger trg_originais_backup_insert
