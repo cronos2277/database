@@ -4,7 +4,6 @@ GO
 
 create table dados_backup (id bigint identity, fk smallint,valor_novo varchar(30), valor_antigo varchar(30) not null, criado datetime not null, ultima_mudanca datetime)
 alter table dados_backup add constraint pk_backup primary key(id)
-alter table dados_backup add constraint fk_original_backup foreign key (fk) references dados_originais(id)
 GO
 
 --Trigger insercao
@@ -22,9 +21,6 @@ AS
 
 	print 'Trigger de insercao executada!'
 	insert into dados_backup (fk,valor_novo,valor_antigo,criado) values (@id,@valor,@valor,@data)
-GO
-
-drop trigger trg_originais_backup_insert 
 GO
 
 -- inserindo
@@ -67,18 +63,22 @@ create trigger trg_originais_backup_delete
 on dbo.dados_originais
 FOR DELETE
 AS
-	DECLARE @id smallint
-	SELECT @id = id from inserted	
+	DECLARE @id smallint	
+	SELECT @id = id from deleted		
+
+	update dados_backup set fk = null where fk = @id
 	delete from dados_backup where id = @id
 	print 'Trigger de exclusao executada!'
 GO
 
 delete from dados_originais where id = 2
-GO
 
 -- Selecao
 select original.id,valor as 'Valor Original', data, valor_novo as 'Ultimo valor',
 valor_antigo as 'Valor Anterior', criado, ultima_mudanca as 'Mudancas'
 from dados_originais as original inner join dados_backup as bck
 on original.id = bck.fk
+GO
+
+select * from dados_originais
 GO

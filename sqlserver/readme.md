@@ -150,3 +150,19 @@ Uma vez que os dados estejam declarados e com os seus respectivos valores, você
 #### IF UPDATE
 Esse `IF UPDATE` não é obrigatório em uma trigger de atualização, porém ele é necessário caso você queira monitorar apenas uma coluna, sem essa expressão, toda a tabela é monitorada, com essa expressão logo após o `FOR UPDATE AS`, você consegue monitorar um campo em específico, de modo que você poderia criar triggers exclusivas para campos de uma tabela. O campo que está sendo monitorado é o campo **valor**, o que explica o `IF UPDATE(valor)`. Esse comando é parte do **TSQL**, logo se faz necessário colocar ele dentro de um bloco `BEGIN` e `END`, sempre que for usar o **IF** a condição deve estar envolta desse bloco.
 
+### Na exclusão
+    -- Trigger para deletar
+    create trigger trg_originais_backup_delete
+    on dbo.dados_originais
+    FOR DELETE
+    AS
+        DECLARE @id smallint	
+        SELECT @id = id from deleted		
+
+        update dados_backup set fk = null where fk = @id
+        delete from dados_backup where id = @id
+        print 'Trigger de exclusao executada!'
+    GO
+
+#### Explicando
+A única diferença é o `DELETE`, além disso repare que está sendo executado mais de uma query, no caso: `update dados_backup set fk = null where fk = @id` e `delete from dados_backup where id = @id`.
