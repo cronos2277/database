@@ -50,6 +50,8 @@ No caso você pode projetar uma data usando a função cast, no caso a função 
 
 `SP_Columns [tabela]` => Mostra as informações detalhadas de todas as colunas de `[tabela]`.
 
+`SP_HELPTEXT [nome do objeto]` => Esse procedimento mostra a query por de trás do `[nome do objeto]`, podendo ser uma tabela, trigger, funcção e etc... Esse procedimento mostra isso de maneira textual e em forma de tabela.
+
 ### Observação
 Procedimento não contém parenteses, por exemplo os procedimentos com a tabela **exemplo** ficaria assim: `SP_HELP exemplo`, geralmente os procedimentos tem **SP** na frente, que significa **Storage Procedure**, já as funções precisam de parenteses, cuidado para não confundir.
 
@@ -166,3 +168,73 @@ Esse `IF UPDATE` não é obrigatório em uma trigger de atualização, porém el
 
 #### Explicando
 A única diferença é o `DELETE`, além disso repare que está sendo executado mais de uma query, no caso: `update dados_backup set fk = null where fk = @id` e `delete from dados_backup where id = @id`.
+
+### RAISERROR e ROLLBACK TRANSACTION
+    CREATE TRIGGER TRG_FUNCSAL
+    ON FUNCSAL_LIMITE
+    FOR INSERT,DELETE
+    AS
+        BEGIN
+            RAISERROR('OPERACAO NAO PERMITIDA PARA FUNCSAL_LIMITE',16,1)
+            ROLLBACK TRANSACTION
+        END
+    GO
+#### Explicando
+`RAISERROR` esse seria equivalente ao *throw new* das linguagens de programação, no caso você pode criar erros customizáveis. O **16** é a naturaza do erro, todo o tipo de erro que tem o nível **16** e o estágio **1** é nível referente ao usuário, logo esse é o motivo de usar esses códigos. Essa é a forma como se executa um **rollback** no SQL Server: `ROLLBACK TRANSACTION`. 
+
+### Outra sintaxe
+    CREATE TRIGGER TRG_LIMITE_FUNCSAL
+    ON DBO.FUNCSAL
+    FOR INSERT, UPDATE
+    AS
+        DECLARE 
+            @ID SMALLINT,
+            @SALARIO MONEY,
+            @PISO MONEY,
+            @TETO MONEY
+
+        SELECT @ID = ID, @SALARIO = SALARIO FROM DBO.FUNCSAL
+        SELECT @PISO = PISO, @TETO = TETO FROM DBO.FUNCSAL_LIMITE
+
+        IF(@SALARIO > @TETO)
+            BEGIN
+                RAISERROR('VALOR ACIMA DO TETO',16,1)
+                ROLLBACK TRANSACTION
+            END
+        ELSE IF(@SALARIO < @PISO)
+            BEGIN
+                RAISERROR('VALOR ABAIXO DO PISO',16,1)
+                ROLLBACK TRANSACTION
+            END
+        ELSE
+            BEGIN
+                PRINT('QUERY EXECUTADO COM SUCESSO!')
+            END
+    GO
+#### Desvio Condicional
+Aqui temos um exemplo de desvio condicional, no caso isso funciona exatamente como nas linguagens procedurais, como o pascal por exemplo, aonde você tem o **IF-ELSE-ELSEIF**, que avalia uma expressão booleana, porém lembre-se de colocar as condições dentro de um bloco **BEGIN** e **END**, o que não difere em nada com relação ao pascal por exemplo.
+
+#### SELECT DECLARE
+Você pode usar em **DECLARE** como bloco igual no código acima, no caso usar isso para declarar várias variáveis de uma vez, mas lembre-se de separar cada variável com vírgulas **,**, além disso você pode usar no comando **SELECT** a definição de mais de uma váriável como nesse exemplo: `SELECT @ID = ID, @SALARIO = SALARIO FROM DBO.FUNCSAL`, no caso: `SELECT`**@variável = coluna** `SELECT FROM SCHEMA.TABELA`.
+
+### Monitorando dois Eventos
+    CREATE TRIGGER TRG_FUNCSAL_LIMITE_ORDEM
+    ON DBO.FUNCSAL_LIMITE
+    FOR INSERT,UPDATE
+    AS
+        DECLARE @PISO MONEY
+        DECLARE @TETO MONEY
+        SELECT @PISO = PISO, @TETO = TETO FROM DBO.FUNCSAL_LIMITE
+        IF(@PISO >= @TETO)
+            BEGIN
+                RAISERROR('PISO ACIMA DO TETO',16,1)
+                ROLLBACK TRANSACTION
+            END
+        ELSE
+            BEGIN
+                PRINT('QUERY EXECUTADO COM SUCESSO!')
+            END
+    GO
+
+### Explicando
+Você pode monitorar mais de um evento se preferir, no caso estamos monitorando a inserção e a atualização, definido aqui `FOR INSERT,UPDATE`, lembre-se de usar a virgula como um separador.
