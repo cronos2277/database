@@ -88,6 +88,7 @@ Aqui definimos o caracter separador de campos, no caso caso encontre o `\t` ou s
 
 ## Trigger
 [Arquivo Exemplo 1](Trigger.sql)
+
 [Arquivo Exemplo 2](Trigger2.sql)
 ### Criando Trigger
     --Trigger insercao
