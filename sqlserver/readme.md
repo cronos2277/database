@@ -240,3 +240,90 @@ Você pode usar em **DECLARE** como bloco igual no código acima, no caso usar i
 
 ### Explicando
 Você pode monitorar mais de um evento se preferir, no caso estamos monitorando a inserção e a atualização, definido aqui `FOR INSERT,UPDATE`, lembre-se de usar a virgula como um separador.
+
+## Criando Procedures
+[Arquivo básico de Procedure](Procedure1.sql)
+
+[Arquivo Procedure retorno](Procedure2.sql)
+### Exemplo básico
+    CREATE PROC SELECTIONAR_TUDO
+    AS
+        SELECT D.ID, D.NOME,E.RUA,E.CIDADE,E.ESTADO	 
+        FROM FUNCIONARIO_DADO D INNER JOIN FUNCIONARIO_END E
+        ON D.ID = E.FK 
+    GO
+    
+    EXEC SELECTIONAR_TUDO
+    GO
+
+### CREATE PROC
+Para criar uma procedure você pode usar `CREATE PROC`**NOME-DA-TABELA** ou `CREATE PROCEDURE`**NOME-DA-TABELA**. além disso você deve colocar a query dentro de um bloco `AS` e `GO`. Para executar esse procedimento recomenda-se usar o `EXEC`, você pode chamar um procedimento sem isso, mas recomenda-se usar.
+
+### Exemplo com Entrada de Parâmetro
+    CREATE PROCEDURE SELECIONAR_ID @ID SMALLINT
+    AS
+        SELECT D.ID, D.NOME,E.RUA,E.CIDADE,E.ESTADO	 
+        FROM FUNCIONARIO_DADO D INNER JOIN FUNCIONARIO_END E
+        ON D.ID = E.FK
+        WHERE D.ID = @ID 
+    GO
+
+### Parâmetros
+Inicialmente você define na procedure o parametro, nesse caso temos o `@ID SMALLINT`, o `@` indica que é uma variável e o `SMALLINT` é o tipo de dados, você deve informar o tipo de assim que você declara a variável. Para chamar
+
+#### Chamando:
+    EXEC SELECIONAR_ID 1
+    GO
+
+O um é o parametro exigido, no caso estamos passando como parametro o número 1.
+
+### Exemplo com mais parâmetros
+    CREATE PROC INSERIR @NOME VARCHAR(50), @RUA VARCHAR(50), @CIDADE VARCHAR(20), @ESTADO CHAR(2)
+    AS
+        INSERT INTO FUNCIONARIO_DADO (NOME) VALUES (@NOME)        
+        INSERT INTO FUNCIONARIO_END(FK,RUA,CIDADE,ESTADO) VALUES (@@IDENTITY,@RUA,@CIDADE,@ESTADO)
+    GO
+
+#### Chamando:
+    EXEC INSERIR 'JOAO','RUA DAS FLORES','RIO DE JANEIRO','RJ'
+    INSERIR 'MARIA','RUA DAS MARGARIDAS','SAO PAULO','SP'
+
+#### @@IDENTITY
+Essa variável retorna o ultimo valor criado por identity, por exemplo como nessa linha o ID é criado automaticamente `INSERT INTO FUNCIONARIO_DADO (NOME) VALUES (@NOME) `, pois é um campo identity, o valor de `@@identity` é tem como valor, o ultimo valor gerado por aquela tabela, se outra tabela gerar o *identity*, esse valor será o identity de outra tabela, sendo o valor o ultimo valor criado. No caso estamos usando isso aqui `INSERT INTO FUNCIONARIO_END(FK,RUA,CIDADE,ESTADO) VALUES (@@IDENTITY,@RUA,@CIDADE,@ESTADO)`, como o identity foi usado pela ultima vez na tabela **FUNCIONARIO_DADO** no ato de inserir, logo esse valor se refere a essa tabela e ao ultimo lugar criado.
+
+#### EXEC
+Sempre use o `exec`, ele não é essencial para o funcionamento, mas importante para a legibilidade de toda a query, para que possa ficar claro de que se trata de uma procedure.
+
+### Procedimento que retorna valores
+    CREATE PROC RETORNA_NOME @ID SMALLINT, @NOME VARCHAR(50) OUTPUT
+    AS
+        SELECT @NOME = NOME FROM DBO.FUNCIONARIO_DADO
+        WHERE ID = @ID
+    GO
+
+#### OUTPUT
+Pode-se retornar valores através do `OUTPUT`, você deve informar o valor que pode ser exportado, como nesse exemplo: `@NOME VARCHAR(50) OUTPUT`, mas lembre-se que você precisa informar valores a variável a ser exportado, do contrário retornado nulo. No caso esse processo ocorre aqui: `@NOME = NOME`, nesse trecho estamos passando valor a váriável `@NOME`ao qual ficará visível externamente.
+
+### Passando valor para variáveis.    
+    DECLARE @SAIDA varchar(50)    
+    EXEC RETORNA_NOME 2, @NOME = @SAIDA OUTPUT    
+    SELECT @SAIDA as "OUTPUT"
+    GO
+
+#### Explicando
+Inicialmente você precisa declarar a variável `DECLARE @SAIDA varchar(50)`, lembrando que o tipo da variável precisa do mesmo tipo que o retorno, aqui é executado o procedimento e atribuido valor a variável `EXEC RETORNA_NOME 2, @NOME = @SAIDA OUTPUT`, repare nessa parte `@NOME = @SAIDA OUTPUT`. Aqui nós estamos passando o valor de `@NOME` a variável de `OUTPUT` na variada criada `@SAIDA`, ou seja: **@VARIAVEL_EXPORTADA = @VARIAVEL_QUE_VAI RECEBER OUTPUT**, além disso o `OUTPUT` é obrigatório do contrário o valor não será passado a essa variável.
+
+### Variavel Global
+    DECLARE @@VISIVEL VARCHAR(50)
+    EXEC RETORNA_NOME 3, @NOME = @@VISIVEL OUTPUT
+    SELECT @@VISIVEL AS "VALOR GLOBAL"
+    GO
+
+##### @@
+Quando tem um arroba a variavél tem escopo local, quando possuí dois o escopo da variável é ampliado.
+
+### Excluíndo
+    DROP PROC RETORNA_NOME
+    GO
+
+Você excluir um procedimento dessa forma, lembrando que você pode usar `PROC` ou `PROCEDURE`.
