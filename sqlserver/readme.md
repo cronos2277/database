@@ -319,7 +319,7 @@ Inicialmente você precisa declarar a variável `DECLARE @SAIDA varchar(50)`, le
     SELECT @@VISIVEL AS "VALOR GLOBAL"
     GO
 
-##### @@
+##### Usando o @@
 Quando tem um arroba a variavél tem escopo local, quando possuí dois o escopo da variável é ampliado.
 
 ### Excluíndo
@@ -327,3 +327,30 @@ Quando tem um arroba a variavél tem escopo local, quando possuí dois o escopo 
     GO
 
 Você excluir um procedimento dessa forma, lembrando que você pode usar `PROC` ou `PROCEDURE`.
+
+### CASE
+[Exemplo com o CASE no SQL Server](Case.sql)
+#### Exemplo de código básico
+    SELECT 
+        CASE
+            WHEN F.ID % 2 = 0 THEN 'PAR: ' + CAST(F.ID AS VARCHAR)
+            ELSE 'IMPAR: ' + CAST(F.ID AS VARCHAR)
+        END AS 'ID',
+	    F.NOME
+    FROM DBO.FUNCIONARIO_DADO AS F
+    GO
+
+##### Como funciona?
+Inicialmente você usa a palavra reservada `CASE`, após isso você usa o `WHEN` para testar condições, como por exemplo `F.ID % 2 = 0`, ou seja se o resto da divisão por dois for zero, então `THEN`, a condição, que seria `'PAR: ' + CAST(F.ID AS VARCHAR)` e sendo `ELSE` como o equivalente a clausura **DEFAULT**, você pode ter **N** `WHEN` e apenas um `ELSE`. Por fim esse bloco deve ser encerrado por um `END AS`**UM_ALIAS**, que nesse exemplo é o *ID*. Ou seja a lógica do case está entre o `CASE` e o `END AS 'ALIAS'`, podendo substituir o **ALIAS** pelo nome da coluna que você deseja projetar no select.
+
+##### Usando mais de um case no SELECT
+    SELECT 
+        CASE
+            WHEN F.ID % 2 = 0 THEN 'PAR: ' + CAST(F.ID AS VARCHAR)
+            ELSE 'IMPAR: ' + CAST(F.ID AS VARCHAR)
+        END AS 'ID',
+        CASE 
+            WHEN F.NOME = F.NOME THEN 'Nome: ' + F.NOME
+        END AS 'NAME'
+    FROM DBO.FUNCIONARIO_DADO AS F
+    GO
