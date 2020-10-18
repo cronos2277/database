@@ -354,3 +354,6 @@ Inicialmente você usa a palavra reservada `CASE`, após isso você usa o `WHEN`
         END AS 'NAME'
     FROM DBO.FUNCIONARIO_DADO AS F
     GO
+
+## TSQL
+Exemplo de arquivos com TSQL: [TSQL](./TSQL)
