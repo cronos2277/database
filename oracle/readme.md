@@ -1,7 +1,8 @@
 # Oracle
+1.[SQL Plus](#sql-plus)
 
+2.[Datas no Oracle](#datas-no-oracle)
 ## SQL Plus
-
 ### Comandos
 Esses comandos funciona apenas no *SQLPLUS*, ou seja essas aplicações podem funcionar ou não em uma ferramenta, mas no SQL Plus funciona, além disso se faz necessário executar o comando `COMMIT` para que as alterações sejam salvas, salvo se o autocommit estiver habilitado, algo que **NÃO** é padrão no **Oracle DB**.
 
@@ -65,3 +66,70 @@ Você pode usar o `&` para definir uma variável, ao qual será questionado pelo
 
 #### Definindo variáveis
 Para você definir uma variável você deve usar a seguinte sintaxe `define [variável] = [valor]`, caso a variável esteja definida, a mesma já terá o seu valor, por exemplo se você fizer essa definição `define id = 2` e `define tabela = 'REGISTRO'`, quando for executado essa query `select * from "&tabela" where id = &id`, o valor de table sempre será interpolado para `REGISTRO` e id para `2`.
+
+## Datas no Oracle
+Você pode obter o dia mês e ano atual usando a seguinte query `select sysdate from dual` detalhe, todo comando de projeção de usando o `select` deve se referenciar a alguma tabela, no caso a *oracle* criou uma tabela para que essa referencia seja feita, sem que você precise informar uma tabela que você criou e dessa forma tornar tudo mais confuso, o output dessa query seria algo como `dd/mm/yy`, ex: `26/01/21`.
+
+### Mascaras
+Você pode usar o `to_char` para formatar uma data, o primeiro argumento da função é a data e o segundo a máscara, podendo usar o **sysdate** para pegar a data atual, ou informar uma data, nesse caso você poderia usar a função com dois parâmetros, com base na data `26/10/2021`:
+
+`select to_char(sysdate,'dd/mm/yy') from dual;` *=>* **26/01/21**
+
+`select to_char(sysdate,'d') from dual;` *=>* **3** *=>* **(1 => Domingo, 2 => Segunda, 3 => Terça, 4 => Quarta, 5 => Quinta, 6 => Sexta, 7 => Sábado).**
+
+`select to_char(sysdate,'day') from dual;` *=>* **terça-feira** => **(1 => Domingo, 2 => Segunda-feira, 3 => Terça-feira, 4 => Quarta-feira, 5 => Quinta-feira, 6 => Sexta-feira, 7 => Sábado).**
+
+`select to_char(sysdate,'mm') from dual;` *=>* **1** *=>* **(1 => Janeiro, 2 => fevereiro ... 11 => Novembro, 12 => dezembro).**
+
+`select to_char(sysdate,'mon') from dual;` *=>* **jan** **(1 => jan, 2 => fev ... 11 => nov, 12 => dec).**
+
+`select to_char(sysdate,'MON') from dual;` *=>* **JAN** **(1 => JAN, 2 => FEV ... 11 => NOV, 12 => DEC).**
+
+`select to_char(sysdate,'Mon') from dual;` *=>* **Jan** **(1 => Jan, 2 => Fev ... 11 => Nov, 12 => Dec).**
+
+`select to_char(sysdate,'month') from dual;` *=>* **janeiro** **(1 => janeiro, 2 => fevereiro ... 11 => novembro, 12 => dezembro).**
+
+`select to_char(sysdate,'MONTH') from dual;` *=>* **JANEIRO** **(1 => JANEIRO, 2 => FEVEREIRO ... 11 => NOVEMBRO, 12 => MARÇO).**
+
+**Como você pode perceber, se o segundo parametro for passado, capitalizado o resultado é capitalizado, minusculo retorna minusculo e maiúsculo retorna em mauísculo.**
+
+`select to_char(sysdate,'yy') from dual;` *=>* **21.**
+
+`select to_char(sysdate,'yyyy') from dual;` *=>* **2021.**
+
+`select to_char(sysdate,'year') from dual;` *=>*  **twenty twenty-one.**
+
+**Obs: São 10 horas da noite agora**
+
+`select to_char(sysdate,'hh') from dual;` *=>* **10** no caso retorna a hora em formato de 12.
+
+`select to_char(sysdate,'hh24') from dual;` *=>* **22** no caso retorna a hora em formato de 24.
+
+`select to_char(sysdate,'mi') from dual;` *=>* **57** Retorna os minutos.
+
+`select to_char(sysdate,'ss') from dual;` *=> **59** Retorna os segundos.
+
+### Operações com datas
+Você pode somar ou subtrair datas, como nesse exemplo `select to_date('22/12/1990') + 1 from dual;`, nesse caso teríamos `23/12/1990`, no caso se faz necessário dar um cast usando `to_date` para dai então seguir com a operação matemática. Porém se for usar o *sysdate* você não precisa dar um cast usando *to_date*, nesse exemplo `select sysdate - 5 from dual;`, sendo a data de hoje `26/01/21` seria `21/01/21`.
+
+### Montando uma query complexa
+
+    select 'Brasil, ' || to_char(sysdate,'dd')
+    || ' de ' || to_char(sysdate,'Month') 
+    || ' de ' || to_char(sysdate,'YYYY')
+    || ' as ' || to_char(sysdate, 'hh24:mi:ss')
+    from dual;
+
+###### output
+    Brasil, 26 de Janeiro   de 2021 as 22:52:59
+
+O mês tem um espaço fixo no oracle, logo tem essa sobra de espaço em branco mesmo e os duplos pipes `||` fazem concatenação de *string*.
+
+### Adicionando meses a data
+Valor positivo projeta a data para o futuro, negativo para o passado, por exemplo `select to_char(add_months(sysdate,2),'dd/mm/yyyy') from dual;` geraria o output `26/03/2021`, no caso o primeiro argumento é a data e o segundo quantos meses devem ser adicionados, lembrando que número negativo reduz. Essa é a forma correta, uma vez que essa função considera os meses que tem 30 e 31 dias e inclusive que fevereiro tem 28 ou 29 dias, nesse caso `26/01/21` virou `26/03/21`, o que poderia ter um resultado diferente se fosse somar 60 dias, uma vez que fevereiro tem apenas 28 dias em 2021.
+
+### Pegando ultimo dias do mês
+`select last_day(sysdate) from dual;` *=>* `31/01/21`, como é janeiro é 31, mas se fosse feveiro poderia ser 28 ou 29 (se o ano for bissexto), de todo modo a função te retorna o ultimo dia do mês de maneira automática, uma vez que os meses podem variar de 28 a 31 dias.
+
+### Calculo de meses entre datas
+Por exemplo essa query `select months_between('01/01/21', '31/12/21') from dual;` resultaria em: `11,96774193548387096774193548387096774194`, que representa a distancia entre os meses.
