@@ -2,6 +2,8 @@
 1.[SQL Plus](#sql-plus)
 
 2.[Datas no Oracle](#datas-no-oracle)
+
+3.[Funções úteis](#funções)
 ## SQL Plus
 ### Comandos
 Esses comandos funciona apenas no *SQLPLUS*, ou seja essas aplicações podem funcionar ou não em uma ferramenta, mas no SQL Plus funciona, além disso se faz necessário executar o comando `COMMIT` para que as alterações sejam salvas, salvo se o autocommit estiver habilitado, algo que **NÃO** é padrão no **Oracle DB**.
