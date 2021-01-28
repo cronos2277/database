@@ -133,3 +133,76 @@ Valor positivo projeta a data para o futuro, negativo para o passado, por exempl
 
 ### Calculo de meses entre datas
 Por exemplo essa query `select months_between('01/01/21', '31/12/21') from dual;` resultaria em: `11,96774193548387096774193548387096774194`, que representa a distancia entre os meses.
+
+## Funções
+
+### Concatenação
+`select concat('abc','def') from dual;` *=>* `abcdef`, essa função concatena duas strings, porém se precisar fazer concatenação com mais de 2 string pode se usar dois pipes `||`, exemplo `select 'abc' || 'def' || 'ghi' from dual` *=>* `abcdefghi`. Porém se for para concatenar valores que não seja string, ou valores que o double pipe pode dar problemas, existe o *concat*.
+### abs
+`select abs(-9.9) from dual;` *=>* `9.9`, a função abs tira o sinal de um valor numérico, assim como funciona nas linguagens de programação.
+
+### ceil
+`select ceil(9.1) from dual;` *=>* `'10`, a função redonda o valor para o maior inteiro mais próximo.
+
+### floor
+`select floor(9.9) from dual;` *=>* `9`, a função redonda o valor para o menor inteiro mais próximo, ao contrário do *ceil*.
+
+### power
+`select power(4,2) from dual;` *=>* `16`, essa função é equivalente a *pow* das linguagem de programação, sendo o primeiro argumento a base e o segundo o expoente.
+
+### sqrt
+`select sqrt(16) from dual;` *=>* `4`, essa função extraí a raíz quadrada do número informado.
+
+### mod
+`select mod(3,2) from dual;` *=>* `1`, essa função divide o primeiro argumento pelo segundo e retorna o resto da divisão.
+
+### round e trunc
+Quando zero a parte decimal é cortada, positivo a parte decimal do número é movido a direita, quando negativo é movido a esquerda.
+#### segundo argumento igual a zero
+`select round(123.456,0) from dual` *=>* `123`, nesse caso o round faz um arredondamento floor quando o valor decimal é menor que `5` e ceil em outras situações. *Obs:O valor zero é o padrão.*
+
+#### segundo argumento maior que zero
+`select round(123.456,1) from dual;` *=>* `123.5`, no caso é feito o arredondamento mantendo as casas decimais caso caso o segundo argumento seja maior que zero, no caso o arredondamento é feito mantendo o número de casas decimais informado no segundo argumento, nesse exemplo uma casa decimal, e como o segundo número após a vírgula é maior ou igual a 5, logo o arrendondamento é feito usando o *ceil*.
+
+#### terceiro argumento menor que zero
+`select round(123.456,-1) from dual;` *=>* `120`, `select round(123.456,-2) from dual;` *=>* `100`, `select round(123.456,-3) from dual;` *=>* `0`. Nesse caso é feito a aproximação com base 10, por exemplo quando está *-1* como segundo argumento é feito o arrendondamento no número divisível por *10* mais próximo, no caso do *123* o número divisível por *10* mais próximo é o *120*, ao passo que se fosse *127* por exemplo seria *130* o output, ou seja ao invés de fazer o arredondamento com base no inteiro ao ter *-1* faz com base na dezena e quanto mais for decrementado um número negativo maior é a base 10 para a comparação, por exemplo: *-1* => *inteiro próximo de (numero/10)*, *-2* => *inteiro próximo de (numero/100)*, *-3* => *inteiro próximo de (numero/1000)* e por ai vai.
+
+#### Trunc
+Essa função tem a mesma lógica que o *round*, mas ao invés de fazer um redondamento *floor* ou *ceil*.
+##### trunc (segundo argumento menor que 0)
+`select trunc(123.456,-1) from dual;` => *120* **<-- move a virgula a esquerda e devolve a penas a parte inteira sem arredondar.**
+
+##### trunc igual a zero ou com o segundo argumento omitido
+`select trunc(123.456) from dual;` => *123* **<-- Mantém apenas a parte inteira.**
+##### trunc (segundo argumento maior que 0)
+`select trunc(123.456,1) from dual;` => *123,4 **<-- move a virgula a direita e mantém o número de casas decimais, informado.**
+
+### Função ASCII
+`select ascii('a') from dual;` *=>* **97**, retorna o código **ascii** de determinado caracter informado.
+
+### Função CHR
+`select chr(97) from dual;` *=>* **a**, retorna o caracter correspondente a esse número da tabela **ascii**. Funciona de maneira inversa a `ascii('char')`.
+
+### UPPER
+`select upper('abcdef') from dual;` *=>* **ABCDEF**, essa função colocar todas as letras para maíusculas.
+
+### LOWER
+`select lower ('ABCDEF') from dual;` *=>* **abcdef**, essa função transforma tudo em minúsculo.
+
+### INITCAP
+`select initcap('abcdef') from dual;` *=>* **Abcdef**, essa função capitaliza a primeira letra de cada palavra.
+
+### LPAD
+`select lpad('texto', 10, '#') from dual;` *=>* **#####texto**, essa função coloca a **esquerda** da string informada no primeiro parametro, os caracteres informados no terceiro, sendo essa quantidade de caracteres a esquerda da string informada no primeiro parametro informado no segundo parametro.
+
+### RPAD
+`select rpad('texto', 10, '#') from dual;` *=>* **texto#####**, essa função coloca a **direita** da string informada no primeiro parametro, os caracteres informados no terceiro, sendo essa quantidade de caracteres a esquerda da string informada no primeiro parametro informado no segundo parametro.
+
+### LENGTH
+`select length('abcde') from dual;` *=>* **5**, essa função retorna a quantidade de caracteres dentro da string, o que incluí `\n \s \t`, etc...
+
+### Replace
+`select replace('texto','t','f') from dual;` *=>* **fexfo**, essa função substituí a string informada no primeiro argumento, substituindo dela os caracteres informados no segundo argumento, pelos caracteres informados no terceiro argumento, caso haja as ocorrências, conforme demonstrado.
+
+### SUBSTR
+`select substr('texto',2,3) from dual;` *=>* **ext**, pega da string informado no primeiro argumento, começando na posição informado no segundo, pega a quantidade de caracteres informado pelo terceiro argumento.
