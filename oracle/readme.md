@@ -6,6 +6,8 @@
 3.[Funções úteis](#funções)
 
 4.[Sequência](#sequência)
+
+5.[Dicionário de dados no Oracle](#dicionário-de-dados)
 ## SQL Plus
 ### Comandos
 Esses comandos funciona apenas no *SQLPLUS*, ou seja essas aplicações podem funcionar ou não em uma ferramenta, mas no SQL Plus funciona, além disso se faz necessário executar o comando `COMMIT` para que as alterações sejam salvas, salvo se o autocommit estiver habilitado, algo que **NÃO** é padrão no **Oracle DB**.
@@ -214,7 +216,7 @@ Essa função tem a mesma lógica que o *round*, mas ao invés de fazer um redon
 ## Sequência
 No oracle as sequências é um objeto a parte que pode ser acoplado a uma tabela, por se tratar de um objeto externo, você pode usar a mesma sequencia para mais de uma tabela inclusive.
 ### Criando sequência
-`create sequence [nome];` essa é maneira mais simples de se criar uma sequência, no caso tudo é criado de maneira padrão, dessa forma o valor inicial é `1`, o valor final é `9999999999999999999999999999`, o incremento é feito de um em um, são carregados na memória 20 sequencias por vez. Tudo isso é setado quando você usa os valores padrões. *Obs: substitua os colchetes pelo nome da sequência que você quer dar.*
+`create sequence [nome];` essa é maneira mais simples de se criar uma sequência, no caso tudo é criado de maneira padrão, dessa forma o valor inicial é `1`, o valor final é `9999999999999999999999999999`, o incremento é feito de um em um, são carregados na memória 20 sequencias por vez. Tudo isso é setado quando você usa os valores padrões. [Documentação](https://docs.oracle.com/cd/B12037_01/server.101/b10759/statements_6014.htm) *Obs: substitua os colchetes pelo nome da sequência que você quer dar.*
 
 #### Criando sequência com parâmetros
     ex: `sequence [NOME DA SEQUENCIA] start with 1 increment by 1 minvalue 1 maxvalue 9999 cache 40 cycle order;`
@@ -250,7 +252,18 @@ Com esse atributo você faz o uso da sequência, no caso o valor é modificado e
 Veja que existe um baixo acoplemento entre a sequencia visto aqui `[NOME DA SEQUENCIA].nextval` e a tabela, o que permite usar a mesma sequência em várias tabelas, no caso com o `.nextval` é usado o valor, agora se você quiser usar esse mesmo valor gerado pela sequência em outras tabelas, você poderia usar o *currval* `insert into [NOME DA TABELA] values([NOME DA SEQUENCIA].currval,'valor de outro campo');`
 
 ### Apagando sequência
-Para isso use `drop sequence [nome];`
+Para isso use `drop sequence [nome];`, importante salientar que excluir a sequência não afeta o funcionamento da tabela, uma vez que não há acoplamento e a sequência compõe parte do comando de inserção de dados e não a estrutura como ocorre em outro banco de dados.
 
 ### Modificando sequência
-Para isso use `alter sequence [nome] [opções como cycle minvalue = 1, etc...];`
+Para isso use `alter sequence [nome] [novas opções como cycle minvalue = 1, etc...];`, por exemplo `alter sequence bai_seq nocycle noorder;` o *nocycle* desabilita a tag *cycle* da tabela, assim como a *noorder* desabilita a tag *order*.
+
+## Dicionário de Dados
+Você pode ter acesso aos dados do usuário colocando colocando `user_` + o que você quer listar, lembre-se que sempre deve ser no plural, por exemplo, :
+
+`select * from user_tables;` => Exibe todas as tabelas.
+
+`select * from user_views;` => Exibe todas as views que o usuário criou.
+
+`select * from user_indexes;` => Exibe todos os índices.
+
+Ou seja se quiser que o **oracle** exiba uma lista de um objeto desses, basta ir a tabela `user_`**tipo no plural**.Se não houver determinado objeto na sua database pode ser que ocorra um erro.
