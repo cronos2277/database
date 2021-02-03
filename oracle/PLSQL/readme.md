@@ -240,3 +240,22 @@ No caso do código acima será exibido até o valor 6, uma vez que a expressão 
     end;
 
 No caso o *exit* sem a expressão `when` funciona exatamente igual ao break das linguagens de programação, lembrando que o `exit` assim como qualquer laço pode funcionar em um bloco anônimo assim como em uma procedure.
+
+### Variaveis Fora do Bloco
+    variable ext varchar2(40);
+
+    declare
+    begin
+        :ext := 'Valor';
+    end;
+
+    print ext;
+
+Aqui temos a definição da variável `variable ext varchar2(40);`, abaixo temos a execução:
+
+    declare
+    begin
+        :ext := 'Valor';
+    end;
+
+e por fim para exibirmos, temos o comando `print ext;`. Dessa forma você acessa uma variável global, ou seja fora do bloco, usando o variable para declarar, o print para visualiza e o `:[nome]`, sendo o `[nome]` o nome correspondente para ter acesso a variavel e modo que é possível passar valor a ela.
