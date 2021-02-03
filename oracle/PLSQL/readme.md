@@ -7,6 +7,8 @@
 
 3.[Laço de repetições](#laço-de-repetições)
 
+4.[SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
+
 ## Exemplo básico
 
 ### Bloco Anônimo
@@ -264,6 +266,31 @@ Aqui temos a definição da variável `variable ext varchar2(40);`, abaixo temos
 
 e por fim para exibirmos, temos o comando `print ext;`. Dessa forma você acessa uma variável global, ou seja fora do bloco, usando o variable para declarar, o print para visualiza e o `:[nome]`, sendo o `[nome]` o nome correspondente para ter acesso a variavel e modo que é possível passar valor a ela.
 
+
+### OUT
+    variable num1 NUMBER;
+
+    CREATE OR REPLACE PROCEDURE INOUT (num OUT NUMBER)
+    IS
+    BEGIN
+        num := 1;
+    END;
+
+    EXECUTE INOUT(:NUM1);
+
+    PRINT NUM1;
+#### Explicando   
+Você pode definir uma variável dentro dos argumentos como *IN* ou *OUT*, por exemplo `CREATE OR REPLACE PROCEDURE INOUT (num OUT NUMBER)` o num aqui é uma variável de output. No caso um argumento dentro de uma procedure precisa ser informado se é um argumento de *INPUT* ou de *OUTPUT*, sendo o *IN* de input, significa que é um argumento que o procedimento vai receber para ser usado dentro do bloco, porém o *out* significa um output, ou seja que o procedimento vai modificar uma variável de escopo mais amplo, no caso a variável a ser modificado nesse exemplo, seria essa `variable num1 NUMBER;` e uma vez que o procedimento seja criado e executado, lembrando que parametros de out devem ser passados de maneira diferente `EXECUTE INOUT(:NUM1);`, repare que nesse caso, temos um dois pontos na frente da variável, seria como se estivessemos passando um valor por referência, logo todos os atributos de *out* deve ser informado usado dois pontos na frente. Uma vez executado, a variável tem o seu valor alterado, podendo ser conferido esse novo valor aqui `PRINT NUM1;`.
+
+### Fechando bloco em específico
+
+    CREATE OR REPLACE PROCEDURE INOUT (num OUT NUMBER)
+    IS
+    BEGIN
+        num := 1;
+    END INOUT;
+
+A grande diferença se dá aqui `END INOUT;`, no caso você pode informar ao end, qual bloco está sendo fechado em qualquer procedure, afim de aumentar a legibilidade do código.  
 ## SQL dentro de um bloco PL/SQL
 
     DECLARE

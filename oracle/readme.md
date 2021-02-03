@@ -28,6 +28,9 @@ Ao digitar `ed` no terminal com o *sqlplus* será exibido todos os comandos digi
     /
     [ENTER]
 
+
+#### SHOW ERROR
+No *SQLPLUS* você pode ter acesso aos detalhes de todos os erros das query através desse comando, no caso é exibido uma tabela com o código do erro e uma breve descrição dele, muito útil na programação de blocos *PL/SQL*.
 #### LIST
 Ao digitar `list` você pode ver tudo que está salvo no buffer do *sqlplus*.
 
