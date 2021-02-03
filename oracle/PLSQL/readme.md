@@ -1,6 +1,12 @@
 # PL/SQL
 [DBMS_OUTPUT](https://docs.oracle.com/database/121/ARPLS/d_output.htm#ARPLS036)
 
+1.[Básico](#exemplo-básico)
+
+2.[Desvio Condicional](#desvio-condicional)
+
+3.[Laço de repetições](#laço-de-repetições)
+
 ## Exemplo básico
 
 ### Bloco Anônimo
@@ -150,3 +156,87 @@ No caso do switch case abrimos um bloco com `case` e fecha-se o bloco com `end c
         else
             [codigo]
     end case;
+
+## Laço de Repetições
+### Laço For
+    declare
+    begin
+        for i in 1 .. 10
+        loop
+        dbms_output.put_line('tabuada do ' || i);
+            for j in 1 .. 10
+            loop
+                dbms_output.put_line(i || ' x ' || j || ' = ' || (i*j) );
+            end loop;
+        end loop;
+    end;
+
+Aqui temos um exemplo de um laço for, no caso a variável *i* e *j* são criadas em tempo de execução, ou seja o próprio laço for cria essas variáveis, nesse caso temos um exemplo mais básico abaixo:
+
+     for [variavel] in [inicio] .. [fim]
+        loop
+            [codigo]
+        end loop;
+
+a estrutura é *for* seguido do nome da variável a ser usada dentro do bloco for, *in* um número para início `..` e um número para o fim, lembrando que esse laço ele apenas trabalha com incremento do inicio ao fim, ou seja bem mais básico que os das linguagens de programação. Após isso tem um outro bloco interno que é o bloco `loop` e `end loop;`. Lembrando que o for executa todo o laço só para depois alterar o contador corrente.
+
+`[variavel]` => Variavel de contador a ser usado dentro do bloco.
+
+`[inicio]` => valor para iniciar a contagem.
+
+`[fim]` => valor para encerrar a contagem.
+
+`[codigo]` => Aqui está o código a ser repetido.
+
+### While
+
+    declare
+        contador number := 1;
+    begin
+        while contador < 10
+        loop
+            dbms_output.put_line(contador);
+            contador := contador + 1;
+        end loop;
+    end;
+
+Esse é o exemplo mais básico do while, no caso aqui já definimos um valor padrão para a variável assim que o bloco se inicia `contador number := 1;`, o while diferente do *for* não possui um contador interno e conta com uma expressão booleana como critério de encerramento. `while [expressao] loop [codigo] end loop;`, lembre-se de incluir um contador, do contrário o laço pode ser infinito.
+
+    while [expressao booleana]
+        loop
+            [codigo]
+        end loop;
+
+`[expressao booleana]` => Aqui deve estar o critério de parada.
+
+`[codigo]` => o código a ser executado nesse laço.
+
+### Exit when
+
+    declare
+        contador number := 1;
+    begin
+        while contador < 10
+        loop
+            dbms_output.put_line(contador);
+            contador := contador + 1;
+            exit when contador = 7;
+        end loop;
+    end;
+
+No caso do código acima será exibido até o valor 6, uma vez que a expressão `exit when` funciona como uma espécie de *break* dentro de um bloco if. A sintaxe é `exit when [expressao booleana]`, sendo que aonde está a `[expressao booleana]` deve ser substituída pela expressão correspondente, desse modo o laço será interrompido, mesmo que a condição de parada do while não seja atingida, funcionando no caso como um break dentro de um if.
+
+#### Exit
+
+    declare
+        contador number := 1;
+    begin
+        while contador < 10
+        loop
+            dbms_output.put_line(contador);
+            contador := contador + 1;
+            exit;
+        end loop;
+    end;
+
+No caso o *exit* sem a expressão `when` funciona exatamente igual ao break das linguagens de programação, lembrando que o `exit` assim como qualquer laço pode funcionar em um bloco anônimo assim como em uma procedure.
