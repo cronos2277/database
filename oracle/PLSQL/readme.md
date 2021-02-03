@@ -18,10 +18,14 @@
     END;
 
 ### DECLARE
-Blocos anônimos são feitos com `DECLARE`, no caso a sintaxe lembra muito o `Pascal`, em declare você define as variáveis, no caso `[nome] [tipo]`, sendo que `[nome]` deve ser substituído pelo *nome da variável*, e o `[tipo]` pelo correspondente tipo, nesse caso `variavel NUMBER;` temos uma variável chamada *varivavel* do tipo *NUMBER*.
+Blocos anônimos são feitos com `DECLARE`, quando se faz necessário declarar variáveis, no caso a sintaxe lembra muito o `Pascal`, em declare você define as variáveis, no caso `[nome] [tipo]`, sendo que `[nome]` deve ser substituído pelo *nome da variável*, e o `[tipo]` pelo correspondente tipo, nesse caso `variavel NUMBER;` temos uma variável chamada *varivavel* do tipo *NUMBER*. O bloco pode ter o declare omitido se não houver declaração de variáveis, conforme a abixo:
+
+    BEGIN
+        dbms_output.put_line('Ola Mundo');
+    END;
 
 ### Bloco BEGIN END.
-Esse bloco é aonde contém a lógica do PLSQL a forma de se atribuir valores a variáveis é exatamente igual ao pascal `:=`, no caso aqui estamos atribuindo *1* a variável `variavel :=1;`
+Esse bloco é aonde contém a lógica do PLSQL a forma de se atribuir valores a variáveis é exatamente igual ao pascal `:=`, no caso aqui estamos atribuindo *1* a variável `variavel :=1;`.Todo bloco deve ter no mínimo o `BEGIN` e `AND`.
 
 ### dbms_output
 Nesse pacote temos o `.put_line` que exibe o valor dentro dos parentes na tela. O DBMS é um pacote padrão do oracle database e o output tem o objetivo de imprimir no console para o usuário. Porém no **SQLPLUS** por padrão não funciona, logo você deve habilitar o **serveroutput** para *on* para que funcione e caso não esteja ativado basta informar no *sqlplus* `set serveroutput on`.
@@ -259,3 +263,102 @@ Aqui temos a definição da variável `variable ext varchar2(40);`, abaixo temos
     end;
 
 e por fim para exibirmos, temos o comando `print ext;`. Dessa forma você acessa uma variável global, ou seja fora do bloco, usando o variable para declarar, o print para visualiza e o `:[nome]`, sendo o `[nome]` o nome correspondente para ter acesso a variavel e modo que é possível passar valor a ela.
+
+## SQL dentro de um bloco PL/SQL
+
+    DECLARE
+        variavel Bairro.bai_nome%TYPE;
+    BEGIN
+        select bai_nome into variavel from bairro where bai_codigo = 2;
+        dbms_output.put_line(variavel);
+    END;
+### Projetando em uma variável
+Todo comando de projeção deve ser salvo em alguma variável e isso é feito nesse trecho de código `into variavel`, ou seja o resultado dessa query é colocado nessa variável e como é uma variável e não um array, se faz necessário que a query seja adaptada para retornar apenas um valor `where bai_codigo = 2;`. Porém isso se aplica a comando de projeção, comando DML ou DDL não precisa disso. Assim sendo:
+
+    DECLARE
+        [variavel] [Tipo];
+    BEGIN
+        select [coluna] into [variavel] from [tabela] [filtro];        
+    END;
+
+`[coluna]` => o nome da coluna na tabela.
+
+`[variavel]` => Variável a ser armazeda o resultado da projeção.
+
+`[tabela]` => A tabela ou view a ser projetada.
+
+`[filtro]` => Clausuras SQL que fará com que a query retorne apenas um valor, ou a quantidade de variada definida.
+
+### Projetando em mais variável
+    DECLARE
+        variavel Bairro.bai_nome%TYPE;
+        codigo INTEGER;
+    BEGIN
+        select bai_codigo, bai_nome into codigo,variavel from bairro where bai_codigo = 2;
+        dbms_output.put_line(codigo);
+        dbms_output.put_line(variavel);
+    END;
+
+Você também pode especificar um tipo a variável, mas ele deve ser compoatível com o tipo da coluna, ao qual ele receberá os dados, logo é mais interessante usar o `%TYPE` e pegar otipo da coluna do que definir um tipo. Além disso é possível projetar valores a mais de uma variável, conforme visto aqui `select bai_codigo, bai_nome into codigo,variavel from bairro where bai_codigo = 2;`, como a query foi projetada para exibir dois valores, deve-se ter obrigatóriamente duas variáveis, assim sendo:
+
+    select [coluna1], [coluna2] into [variavel1],[variavel2] from [tabela] [filtro];
+
+Lembrando que o valor referente a *coluna1* será salvo a *variavel1* assim como a *coluna2* a *variavel2*, ou seja o lado direito do **into**, deve estar com as suas variáveis definidos de maneira sequencial, com base no lado esquerdo do **into**.
+### %TYPE
+Com essa expressão você pega o mesmo tipo de dados, que a coluna se mesma referencia, por exemplo `variavel Bairro.bai_nome%TYPE;` a variável terá o mesmo tipo que a coluna *bai_nome* da tabela de *bairro*, uma vez que o ponteramento é `[tabela].[coluna]` e com o `%TYPE` faz referência ao tipo.
+
+### Usando funções
+
+    DECLARE
+        quantos number;
+    BEGIN
+        select count(bai_codigo) into quantos from bairro;
+        dbms_output.put_line('Quantidade de registros: '||quantos);
+    END;
+
+Também é possível usar função na composição das queries, mas sempre que for executado uma query de projeção, sempre deve-se fazer uso de *into*, uma vez que é obrigatório.
+
+### Inserindo dados.
+    CREATE OR REPLACE PROCEDURE criar_bairro
+    (
+        nome in Bairro.bai_nome%type,
+        codigo in Bairro.bai_codigo%type
+    )
+    is
+    BEGIN
+        insert into bairro (bai_codigo, bai_nome) values(codigo,nome);
+        dbms_output.put_line(nome || ' inserido com sucesso!');
+    END;
+
+Repare que nesse *into* da query faz referência a query informada e não a uma imposição da linguagem *PL/SQL*, ou seja em comandos *DDL* e *DML*, não é preciso projetar o valor em algum lugar, isso se aplica apenas a comandos de projeção. Para executar essa procedure acima, basta `execute criar_bairro(nome,id);`.
+
+### Atualizando
+
+    CREATE OR REPLACE PROCEDURE atualizar_bairro
+    (
+        nome in Bairro.bai_nome%type,
+        codigo in Bairro.bai_codigo%type
+    )
+    is
+    BEGIN
+        update bairro set bai_nome = nome where bai_codigo = codigo;
+        dbms_output.put_line(nome || ' atualizado com sucesso!');
+    END;
+
+Repare que nessa query não tem o **into** `update bairro set bai_nome = nome where bai_codigo = codigo;`, ou seja isso é possível pelo fato de que não se trata de uma query de projeção.
+
+### Excluíndo
+
+    CREATE OR REPLACE PROCEDURE remover_bairro
+    (  
+    codigo in Bairro.bai_codigo%type
+    )
+    is
+        nome Bairro.bai_nome%type;
+    BEGIN
+        select bai_nome into nome from bairro where bai_codigo = codigo;
+        delete from bairro where bai_codigo = codigo;
+        dbms_output.put_line(nome || ' exluido com sucesso!');
+    END;
+
+Também é possível colocar mais de uma query, no caso é projetado a variável `nome` o retorno da query e posteriormente executado a query de remoção de um determinado registro.
