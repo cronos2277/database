@@ -9,6 +9,8 @@
 
 4.[SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
 
+5.[Função](#função)
+
 ## Exemplo básico
 
 ### Bloco Anônimo
@@ -164,6 +166,7 @@ No caso do switch case abrimos um bloco com `case` e fecha-se o bloco com `end c
     end case;
 
 ## Laço de Repetições
+Aqui tem um exemplo mais avançado de [laços de repetição e procedure](bloco_procedure.sql)
 ### Laço For
     declare
     begin
@@ -389,3 +392,38 @@ Repare que nessa query não tem o **into** `update bairro set bai_nome = nome wh
     END;
 
 Também é possível colocar mais de uma query, no caso é projetado a variável `nome` o retorno da query e posteriormente executado a query de remoção de um determinado registro.
+
+## Função
+### Criando uma função
+    CREATE OR REPLACE FUNCTION funcao
+    RETURN NUMBER
+    IS
+    BEGIN
+      dbms_output.put_line('Ola Mundo');
+      RETURN 1;
+    END;
+
+Essa é uma função, toda função deve retornar alguma coisa, logo para uma função essa clausura é obrigatório ` RETURN [tipo]`, sendo o `[tipo]` o dadao que a função deve retornar e nessa função temos esse retorno nesse ponto aqui `RETURN 1;`. Tirando esse detalhe do retorno, tudo é igual ao *procedure*. Ou seja:
+
+    CREATE OR REPLACE FUNCTION [NOME]
+    RETURN [TIPO]
+    IS
+    BEGIN      
+      RETURN [VALOR];
+    END;
+
+`[NOME]` => Aqui você informa o nome da função.
+
+`[TIPO]` => Que tipo de dado deve retornar.
+
+`[VALOR]` => Dentro desse contexto o valor a ser retornado.
+
+### Usando função dentro do SQL.
+Você também pode usar uma função dentro de uma query *SQL*, `select * from bairro where bai_codigo = funcao()`. Além disso pode ser colocado em variávcel também:
+
+    variable exemplo number;
+    execute :exemplo := funcao();
+    print :exemplo;
+
+### Exemplo
+Aqui tem um exemplo mais complexo envolvendo função [BHASKARA](bhaskara_function.sql)
