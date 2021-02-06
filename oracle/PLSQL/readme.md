@@ -11,6 +11,8 @@
 
 5.[Função](#função)
 
+6.[Trigger](#trigger)
+
 ## Exemplo básico
 
 ### Bloco Anônimo
@@ -427,3 +429,90 @@ Você também pode usar uma função dentro de uma query *SQL*, `select * from b
 
 ### Exemplo
 Aqui tem um exemplo mais complexo envolvendo função [BHASKARA](bhaskara_function.sql)
+
+## Trigger
+
+Toda a trigger tem duas variáveis, que seria a `:old.[coluna]` e a `:new.[coluna]`, lembrando que a `.[coluna]` deve ser substitído pelo campo correspondente, a `:old.[coluna]` tem o valor antigo, o valor que estava no campo antes da trigger ser chamada, ao passo que `:new.[coluna]` tem o valor novo a ser inserido. No caso apenas o evento de `UPDATE` trabalha com as duas, o `DELETE` tem valor no `:old.[coluna]` e com o `:new.[coluna]` em branco, ao passo que o `INSERT` está na situação inversa, no caso sem valor no `:old.[coluna]` e apenas com valor em `:new.[coluna]`, essas variáveis são criadas de maneira automática dentro da Trigger e referenciam a tabela ao qual deve ser ponterada com o campo para que se faça alguma comparação ou interação. 
+### Trigger de tabela
+    
+    CREATE OR REPLACE TRIGGER gatilho_basico
+        AFTER INSERT OR UPDATE OR DELETE ON bairro
+        BEGIN
+            dbms_output.put_line('Valor');
+        END;
+
+Trigger são ativados antes ou depois de algum evento, *Triggers* sempre devem ser associado a alguma tabela e apenas pode ter uma trigger por evento, ou seja, se existe uma trigger que executa antes da inserção, não pode ter outra que execute no **before** do **insert**.
+
+    CREATE OR REPLACE TRIGGER [NOME]
+        [QUANDO] [EVENTO] 
+        ON [TABELA]
+        BEGIN
+            [CODIGO]
+        END;
+
+`[NOME]` => Nome que você quer dar a **TRIGGER**.
+
+`[QUANDO]` => Aqui é quando a *Trigger* deve ser executada, sendo as opçoes disponíveis: **BEFORE** para antes do evento e **AFTER** para depois do evento.
+
+`[EVENTO]` => A que evento essa *trigger* vai ser chamado, podendo ser `INSERT`, `UPDATE` ou `DELETE`, pode ser um dois três, dois dos três ou para todos os três.
+
+`[TABELA]` => A Tabela a ser monitorada.
+
+`[CODIGO]` => O que deve ser feito quando essa trigger for ativada.
+
+Lembrando que como não tem uma clausura `FOR EACH ROW` ou `WHEN` esse gatilho é disparado quando qualquer um dos campos for inserido, atualizado, ou excluído, conforme visto aqui `AFTER INSERT OR UPDATE OR DELETE ON bairro`.
+
+### Excluíndo
+Para excluir `drop trigger [NOME];`, substituíndo o `[NOME]` pelo nome da Trigger.
+### Trigger para campos especifico
+
+    CREATE OR REPLACE TRIGGER trigger_for_each_row
+    BEFORE INSERT OR UPDATE OR DELETE
+    OF bai_codigo
+    ON bairro
+    FOR EACH ROW 
+    BEGIN
+
+        IF :new.bai_codigo < 1 THEN
+            raise_application_error(-20001,'ID deve ser maior ou igual a 1');
+        ELSE
+            dbms_output.put_line('O valor ANTIGO eh: '||:old.bai_codigo);
+            dbms_output.put_line('O valor NOVO eh: '||:new.bai_codigo);
+        END IF;
+
+    END trigger_for_each_row;
+
+Aqui temos um exemplo usando o `FOR EACH ROW` repare que se faz necessário essa clausura informando qual campo deve ser monitorado `OF bai_codigo`, ou seja:
+
+    ...
+    OF [COLUNA]
+    ON [TABELA]
+    FOR EACH ROW
+    ...
+
+`[COLUNA]` => Aqui é informado os campos a serem analizados pela trigger.
+
+`[TABELA]` => A tabela deve ser informada.
+
+**FOR EACH ROW** Aqui estamos indicando que a trigger funcionará apenas para a(s) coluna(s) informada.
+
+### raise_application_error
+Essa função lança um erro, seria o equivalente ao `throw new` das linguagens de programação, o primeiro argumento é o código de erro, que deve ser na casa dos `20000` para sinalizar erro customizável e sendo o segundo parametro a mensagem a ser exibida ao usuário, cujo o objetivo é informar que a inserção, atualização e exclusão quebra a regra de negócio imposta.
+
+### Trigger condicional
+
+    CREATE OR REPLACE TRIGGER trigger_for_each_row
+    BEFORE INSERT OR UPDATE
+        OF bai_codigo
+        ON bairro
+    FOR EACH ROW 
+        WHEN (new.bai_codigo < 1)
+    BEGIN  
+        raise_application_error(-20001,'ID deve ser maior ou igual a 1');
+    END trigger_for_each_row;
+
+Essa trigger acima faz a mesma coisa que a acima, porém a lógica dessa trigger é vista aqui `WHEN (new.bai_codigo < 1)`, caso essa expressão seja verdadeira o código abaixo dela é executado, no caso esse código abaixo:
+
+    BEGIN  
+        raise_application_error(-20001,'ID deve ser maior ou igual a 1');
+    END trigger_for_each_row;
