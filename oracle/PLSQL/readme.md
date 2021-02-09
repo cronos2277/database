@@ -15,6 +15,22 @@
 
 ## Exemplo básico
 
+### Tabela Bairro
+
+     CREATE TABLE "SYSTEM"."BAIRRO" 
+    (	"BAI_CODIGO" NUMBER(*,0), 
+        "BAI_NOME" VARCHAR2(30 BYTE) NOT NULL ENABLE, 
+        "BAI_DESCRICAO" VARCHAR2(20 BYTE), 
+        PRIMARY KEY ("BAI_CODIGO")
+    USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 
+    STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+    PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+    TABLESPACE "SYSTEM"  ENABLE
+    ) PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+    STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+    PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+    TABLESPACE "SYSTEM" ;
+
 ### Bloco Anônimo
     DECLARE
         variavel NUMBER;
@@ -516,3 +532,53 @@ Essa trigger acima faz a mesma coisa que a acima, porém a lógica dessa trigger
     BEGIN  
         raise_application_error(-20001,'ID deve ser maior ou igual a 1');
     END trigger_for_each_row;
+
+### Trigger de Logon e Logoff
+[Trigger Database](trigger_database.sql)
+
+    -- LOGON
+    CREATE OR REPLACE TRIGGER LOG_AFTER
+    AFTER LOGON ON DATABASE
+    BEGIN
+        insert into logs values(log_seq.nextval,user,'IN',sysdate);
+    END LOG_AFTER;
+
+    -- LOGOFF
+    CREATE OR REPLACE TRIGGER LOG_BEFORE
+    BEFORE LOGOFF ON DATABASE
+    BEGIN
+        insert into logs values(log_seq.nextval,user,'OUT',sysdate);
+    END LOG_BEFORE;
+
+Você pode criar trigger `LOGON` quando o usuário entra e `LOGOFF` que é quando saí, lembrando que o `LOGON` deve ser sempre no `AFTER` uma vez que não existe antes de logar, assim como o `BEFORE` deve ser usado com o `LOGOFF`, ou seja na entrada deve ser no after, pois no antes estava deslogado da tabela, ou seja depois de logado e na saída deve ser sempre no before, pois no after o usuário estará fora.
+
+**No oracle o `user` é uma variável do systema que retorna o nome do usuário, assim como o `sysdate` retorna a data atual.**
+
+### Removing, inserting, updating
+
+    CREATE OR REPLACE TRIGGER GATILHO
+    AFTER INSERT OR UPDATE OR DELETE
+    ON BAIRRO
+    BEGIN
+    IF INSERTING THEN
+        DBMS_OUTPUT.PUT_LINE('VALOR INSERIDO');
+    ELSIF UPDATING THEN
+        DBMS_OUTPUT.PUT_LINE('VALOR ATUALIZADO');
+    ELSIF DELETING THEN
+        DBMS_OUTPUT.PUT_LINE('VALOR REMOVIDO');  
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('none');  
+    END IF;
+    END GATILHO;
+
+`IF INSERTING THEN` *=>* **Bloco executado caso a operação seja de inserção**.
+
+`ELSIF UPDATING THEN` *=>* **Bloco executado caso a operação seja de atualização**.
+
+`ELSIF DELETING THEN` *=>* **Bloco executado caso a operação seja de exclusão**.
+
+### Desabilitando Trigger
+`ALTER TRIGGER [NOME] DISABLE;`, o `[NOME]` deve ser substituída pelo correspondente, nesse caso a *TRIGGER* é desabilitada, no caso quando uma trigger é desabilitada, a mesma é ignorada quando o evento ao qual está registrado ocorre. 
+
+### Habilitando Trigger
+`ALTER TRIGGER [NOME] ENABLE;`, o `[NOME]` deve ser substituída pelo correspondente, no caso essa ativa uma trigger desabilitada pelo `DISABLE` [acima](#desabilitando-trigger).
