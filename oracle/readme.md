@@ -16,6 +16,8 @@
 08.[Synonym](#synonym)
 
 09.[PL/SQL](PLSQL/readme.md)
+
+10.[Tabela Temporária](#tabela-temporaria)
 ## SQL Plus
 ### Comandos
 Esses comandos funciona apenas no *SQLPLUS*, ou seja essas aplicações podem funcionar ou não em uma ferramenta, mas no SQL Plus funciona, além disso se faz necessário executar o comando `COMMIT` para que as alterações sejam salvas, salvo se o autocommit estiver habilitado, algo que **NÃO** é padrão no **Oracle DB**.
@@ -287,3 +289,30 @@ Para criar `create view [nome] as [select]`, aonde está `[nome]` você colocar 
 
 ## Synonym
 No Oracle também é possível criar um apelido a uma tabela com um nome muito longo, geralmente isso é util para simplificar o nome da tabela sem mexer nela assim como facilitar nas criações que query complexas visando reduzir o seu tamanho. Para isso `create synonym [apelido] for [tabela];`, aonde está o apelido, você coloca um nome da sua preferência, e o `[tabela]` é aonde você informa o nome da tabela. Por exemplo: `create synonym b for bairro;`, nesse caso você poderia fazer referência a essa tabela *bairro* usando o apelido, no caso `select * from b`, ou seja dessa forma foi possível criar um apelido para a tabela, você deve usar o **public** caso você queira que a tabela fique visível aos outros `create synonym public [apelido] for [tabela];`, com o comando **create or replace** `create or replace public synonym b for bairro;`, você pode subscreever caso já exista, além disso temos os `alter [public] synonym [apelido] for [tabela] [opções]`, [documentação](https://docs.oracle.com/database/121/SQLRF/statements_2016.htm#SQLRF56347), já para excluir `drop synonym [apelido];`, sendo que aonde está o `[apelido]` deve ser informado o valor correspondente.
+
+## Tabela temporaria
+Uma tabela temporária é excluída quando a sessão é encerrada, mantendo apenas a estrutura, ou seja os dados de uma tabela temporária não fica de maneira permanente registrada no banco, apenas a estrutura, o que pode ser útil quando se quer criar um `sandbox` para a manipulação de dados. Repare que uma tabela temporária é sempre global, uma vez que isso é nítido na sintaxe, uma vez que a mesma-o compõe.
+### Primeira forma
+    CREATE GLOBAL TEMPORARY TABLE [NOME] ([nome1] [tipo1], [nome2] [tipo2], etc...);
+
+Através desse comando você cria uma tabela temporária, nesse caso a tabela é criada em branco e os dados adicionados a essa tabela serão excluídos após a desconexão.
+
+### Segunda forma 
+
+    CREATE GLOBAL TEMPORARY TABLE [TABELA] ON COMMIT PRESERVE ROWS AS [QUERY];
+
+Nessa segunda forma você cria uma tabela com base em uma query, diferente de uma *view*, qualquer valor alterado na tabela original, não é refletido aqui, ou seja essa tabela passa a ser independente da outra e qualquer dado inserido nessa tabela, será perdido após o logout, ou seja é criado uma tabela temporária com base na **Query**, porém qualquer modificação na temporária não altera a original e qualquer alteração na original, não influência a temporária, e uma vez deslogado a tabela temporária tem seus dados excluídos.
+
+`[TABELA]` => Aqui deve ser informado o nome da tabela.
+
+`QUERY` => Aqui a query que será a base para a criação da tabela, deve-se ser uma query de projeção do tipo select.
+
+### Terceira Forma
+
+    CREATE GLOBAL TEMPORARY TABLE [TABELA] ON COMMIT DELETE ROWS AS [QUERY]
+
+ou simplesmente
+
+    CREATE GLOBAL TEMPORARY TABLE [TABELA] AS [QUERY];
+
+Nessa forma é criada apenas a estrutura da tabela original, mas sem os dados, de toda forma qualquer dado inserido aqui, será excluído, mas diferente da segunda forma, essa cria apenas as estruturas sem os dados copiados.
