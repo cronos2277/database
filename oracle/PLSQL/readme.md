@@ -1,17 +1,21 @@
 # PL/SQL
 [DBMS_OUTPUT](https://docs.oracle.com/database/121/ARPLS/d_output.htm#ARPLS036)
 
-1.[Básico](#exemplo-básico)
+1. [Básico](#exemplo-básico)
 
-2.[Desvio Condicional](#desvio-condicional)
+2. [Desvio Condicional](#desvio-condicional)
 
-3.[Laço de repetições](#laço-de-repetições)
+3. [Laço de repetições](#laço-de-repetições)
 
-4.[SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
+4. [SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
 
-5.[Função](#função)
+5. [Função](#função)
 
-6.[Trigger](#trigger)
+6. [Trigger](#trigger)
+
+7. [Registros](#registro)
+
+8. [Referenciando Tabelas](#rowtype)
 
 ## Exemplo básico
 
@@ -582,3 +586,64 @@ Você pode criar trigger `LOGON` quando o usuário entra e `LOGOFF` que é quand
 
 ### Habilitando Trigger
 `ALTER TRIGGER [NOME] ENABLE;`, o `[NOME]` deve ser substituída pelo correspondente, no caso essa ativa uma trigger desabilitada pelo `DISABLE` [acima](#desabilitando-trigger).
+
+## Registro
+
+    DECLARE
+    TYPE REGISTRO IS RECORD
+    (
+        COD INTEGER,
+        VALOR VARCHAR2(30)
+    );
+
+    REG REGISTRO;
+    BEGIN
+        REG.COD := 1;
+        REG.VALOR := 'OLA MUNDO';
+        DBMS_OUTPUT.PUT_LINE(REG.COD || ', '|| REG.VALOR);
+    END;
+
+Os registros no *PL/SQL* funciona da mesma forma que no *C ANSI* ou no *PASCAL*, aqui é criado um novo tipo e o mesmo é usado para armazenar tipos de dados mais complexos, com uma anotação ponto. Sintaxe básica `TYPE REGISTRO IS RECORD([subnome] [subtipo]);` depois para usar `[nome] [novo_tipo_criado]`, para usar `[nome].[subnome]`.
+
+`subnome` => O nome do atributo ao qual o registro contém.
+
+`subtipo` => O tipo desse subatributo.
+
+`[nome]` => o nome da variável
+
+`[novo_tipo_criado]` => O tipo que você criou.
+
+### Conceito
+
+       DECLARE
+    TYPE [NOVO_TIPO_CRIADO] IS RECORD
+    (
+        [SUBNOME] [SUBTIPO],
+        [SUBNOME] [SUBTIPO]
+    );
+
+    [NOME] [NOVO_TIPO_CRIADO];
+    BEGIN
+        [NOME].[SUBTIPO] := [VALOR];
+        [NOME].[SUBTIPO] := [VALOR];
+        DBMS_OUTPUT.PUT_LINE([NOME].[SUBTIPO] || ', '|| [NOME].[SUBTIPO]);
+    END;
+
+## %ROWTYPE
+###### Conceito
+    DECLARE
+        [NOME] [TABELA]%ROWTYPE;
+    BEGIN
+        SELECT * INTO [NOME] FROM [TABELA] WHERE [COLUNA] = [VALOR];  
+        DBMS_OUTPUT.PUT_LINE([NOME].[COLUNA]);
+    END;
+
+O **%ROWTYPE** cria uma variável do tipo tabela, ou seja é possível fazer referência a toda uma tabela usando essa estratégia, lembrando que isso é válido se você quiser pegar todos os campos de uma tabela, do contrário dará erro, seria algo como `select * from` com clausura where, uma vez que isso não é um array. Se precisar que um ou outro campo seja excluído use [registros](#registro).
+
+###### Exemplo
+    DECLARE
+        TAB BAIRRO%ROWTYPE;
+    BEGIN
+        SELECT * INTO TAB FROM BAIRRO WHERE BAI_CODIGO = 1;  
+        DBMS_OUTPUT.PUT_LINE(TAB.BAI_CODIGO);
+    END;
