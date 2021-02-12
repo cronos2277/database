@@ -782,3 +782,62 @@ Para se usar você referência os indices de um array com os parentes, como aqui
 > Se uma instrução SELECT INTO falhar em retornar uma linha, o PL / SQL levantará a exceção predefinida NO_DATA_FOUND, independentemente de você verificar SQL% NOTFOUND na próxima linha ou não. Uma instrução SELECT INTO que chama uma função de agregação SQL nunca gera NO_DATA_FOUND, porque essas funções sempre retornam um valor ou um NULL. Nesses casos, SQL% NOTFOUND retorna FALSE. % BULK_ROWCOUNT não é mantido para inserções em massa porque isso seria redundante, pois uma inserção típica afeta apenas uma linha. Consulte "Contando Linhas Afetadas por FORALL com o Atributo% BULK_ROWCOUNT".
 
 > Você pode usar os atributos escalares% FOUND,% NOTFOUND e% ROWCOUNT com ligações em massa. Por exemplo,% ROWCOUNT retorna o número total de linhas processadas por todas as execuções da instrução SQL. Embora% FOUND e% NOTFOUND se refiram apenas à última execução da instrução SQL, você pode usar% BULK_ROWCOUNT para inferir seus valores para execuções individuais. Por exemplo, quando% BULK_ROWCOUNT (i) é zero,% FOUND e% NOTFOUND são FALSE e TRUE, respectivamente.
+
+### Estrutura básica
+
+    DECLARE
+        CURSOR [SELECAO] IS [[SELECT [CAMPOS] FROM [TABELA] [WHERE] ]];
+        [VARIAVEL] [SELECAO]%ROWTYPE;
+    BEGIN
+        OPEN [SELECAO];
+        CLOSE [SELECAO];
+    END;
+
+`[SELECAO]` => Aqui você define o nome do cursor, lembrando sempre que ele deve ser aberto e fechado no corpo da procedure `OPEN [SELECAO];` e `CLOSE [SELECAO];`.
+
+`[VARIAVEL]` => O cursor é um tipo e toda vez que você precisar pegar algum valor, você precisa usar essa referência.
+
+#### [[SELECT [CAMPOS] FROM [TABELA] [WHERE] ]]
+O cursor recebe sempre o resultado de um comando de projeção, no caso aqui entra os comandos de projeção usando o select.
+
+#### Exemplo Básico
+    DECLARE
+        CURSOR SELECAO IS SELECT * FROM BAIRRO;
+        SEL SELECAO%ROWTYPE;
+    BEGIN
+        OPEN SELECAO;
+        CLOSE SELECAO;
+    END;
+
+#### FETCH
+O **FETCH** seria o equivalente ao *Iterator*, e funciona de maneira semelhante ao *.next()*, no caso o FETCH ele vai populando uma variável a cada interação, segue a estrutura:
+
+    DECLARE
+        CURSOR [CURSOR_NOME] IS [QUERY_SELECT];
+        [VAR] [CURSOR_NOME]%ROWTYPE;
+    BEGIN
+        OPEN [CURSOR_NOME];
+        FETCH [CURSOR_NOME] INTO [VAR];
+            DBMS_OUTPUT.PUT_LINE([VAR].[COLUNA]);
+        CLOSE [CURSOR_NOME];
+    END;
+
+`[CURSOR_NOME]` => Nome do cursor, `[QUERY_SELECT]` => uma query de projeção do tipo *select*, `[VAR]` => faz referência ao resultado dentro do cursor, ou seja é aonde é armazenado o valor pego pelo *cursor*. No caso o que interessa ao **FETCH**:
+
+    FETCH [CURSOR_NOME] INTO [VAR];
+        DBMS_OUTPUT.PUT_LINE([VAR].[COLUNA]);
+    CLOSE [CURSOR_NOME];
+
+A cada interação o *FETCH* copula o `[VAR]` adicionando valor a ele, no caso o **FETCH** pegou o primeiro valor, geralmente se usa o **FETCH** dentro de algum laço de repetição, o seu funcionamento é semelhante ao **.next()** dos *iterators*, no caso inicialmente pega o primeiro valor, depois se chamado denovo pega o segundo, se chamado denovo pega o terceiro e por ai vai, no caso como foi chamado apenas uma vez, pega apenas o primeiro. Agora nesse exemplo abaixo pega o primeiro e o segundo:
+
+    DECLARE
+        CURSOR SELECAO IS SELECT * FROM BAIRRO;
+        SEL SELECAO%ROWTYPE;
+    BEGIN
+        OPEN SELECAO;
+            FETCH SELECAO INTO SEL;
+                DBMS_OUTPUT.PUT_LINE(SEL.BAI_NOME);
+            FETCH SELECAO INTO SEL;
+                DBMS_OUTPUT.PUT_LINE(SEL.BAI_NOME);  
+        CLOSE SELECAO;
+    END;
