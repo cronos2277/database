@@ -1,21 +1,23 @@
 # PL/SQL
 [DBMS_OUTPUT](https://docs.oracle.com/database/121/ARPLS/d_output.htm#ARPLS036)
 
-1. [Básico](#exemplo-básico)
+01. [Básico](#exemplo-básico)
 
-2. [Desvio Condicional](#desvio-condicional)
+02. [Desvio Condicional](#desvio-condicional)
 
-3. [Laço de repetições](#laço-de-repetições)
+03. [Laço de repetições](#laço-de-repetições)
 
-4. [SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
+04. [SQL dentro de um bloco](#sql-dentro-de-um-bloco-plsql)
 
-5. [Função](#função)
+05. [Função](#função)
 
-6. [Trigger](#trigger)
+06. [Trigger](#trigger)
 
-7. [Registros](#registro)
+07. [Registros](#registro)
 
-8. [Referenciando Tabelas](#rowtype)
+08. [Referenciando Tabelas](#rowtype)
+
+09. [O Equivalente a Arrays](#type-table)  
 
 ## Exemplo básico
 
@@ -647,3 +649,92 @@ O **%ROWTYPE** cria uma variável do tipo tabela, ou seja é possível fazer ref
         SELECT * INTO TAB FROM BAIRRO WHERE BAI_CODIGO = 1;  
         DBMS_OUTPUT.PUT_LINE(TAB.BAI_CODIGO);
     END;
+
+## Type Table
+[Documentação](https://docs.oracle.com/cd/A57673_01/DOC/server/doc/PLS23/ch4.htm#plsql%20tabs)
+
+    DECLARE 
+        TYPE [NOVO_TIPO] IS TABLE OF [TIPO] INDEX BY [INDICE];
+        [VARIAVEL] [NOVO_TIPO];
+    BEGIN
+        [VARIAVEL](1) := 'OLA';
+        [VARIAVEL](2) := 'MUNDO';
+        DBMS_OUTPUT.PUT_LINE([VARIAVEL](1) || ' - ' || [VARIAVEL](2));
+    END;
+
+`[NOVO_TIPO]` => Aqui você informa o nome que irá referenciar essa nova variável que está sendo criado.
+
+`[TIPO]` => O tipo ao qual vai ser baseado.
+
+`[VARIAVEL]` => A variável que vai usar esse novo tipo criado.
+
+### Indice
+
+`[INDICE]` => Uma coluna a ser escolida para ser usada como índice. 
+
+#### BINARY INTEGER
+> Com a Oracle Call Interface ou os Oracle Pré-compiladores, você pode vincular matrizes de host de escalares (mas não matrizes de host de estruturas) a tabelas PL / SQL declaradas como os parâmetros formais de um subprograma. Isso permite que você passe matrizes de host para funções e procedimentos armazenados. Você pode usar uma variável BINARY_INTEGER ou uma variável de host compatível para indexar os arrays de host. Dado o intervalo do subscrito da matriz m .. n, o intervalo do índice da tabela PL / SQL correspondente é sempre 1 .. n - m + 1. Por exemplo, se o intervalo do subscrito da matriz for 5 .. 10, o índice da tabela PL / SQL correspondente o intervalo é 1 .. (10 - 5 + 1) ou 1 .. 6.
+
+> Para atribuir todos os valores em uma matriz de host a elementos em uma tabela PL / SQL, você pode usar uma chamada de subprograma. No exemplo Pro * C abaixo, você passa o salário da matriz de host para um bloco PL / SQL. Do bloco, você chama uma função local que declara a tabela PL / SQL sal_tab como um de seus parâmetros formais. A chamada de função atribui todos os valores no parâmetro real salary a elementos no parâmetro formal sal_tab.
+
+No caso é o índice `BINARY INTEGER`, que faz com que esse tipo se comporte de uma maneira semelhante a um array de uma linguagem de programação tradicional, como no exemplo abaixo:
+
+    DECLARE 
+        TYPE TIPO IS TABLE OF VARCHAR2(40) INDEX BY BINARY_INTEGER;
+        VARIAVEL TIPO;
+    BEGIN
+        VARIAVEL(1) := 'OLA';
+        VARIAVEL(2) := 'MUNDO';
+        DBMS_OUTPUT.PUT_LINE(VARIAVEL(1) || ' - ' || VARIAVEL(2));
+    END;
+
+**Output:** `OLA - MUNDO`.
+
+Para se usar você referência os indices de um array com os parentes, como aqui `VARIAVEL(1)`, na prática, graças a indexação por inteiro binário, permite com que esse tipo se porte semelhante a um array, mas o tipo tabela não deve ser confundido a um array de uma linguagem de programação, pois a funcionalidade vai muito além disso, outra coisa essa parte `TYPE TIPO IS TABLE OF VARCHAR2(40) INDEX BY BINARY_INTEGER;`, poderia ser substituida por `TYPE TIPO IS TABLE OF [tabela]%type INDEX BY BINARY_INTEGER`; sem problemas, ou seja ali é aceito qualquer tipo, inclusive o tipo de colunas. Segue o exemplo abaixo usando o `%type`:
+
+    DECLARE 
+        TYPE TIPO IS TABLE OF BAIRRO.BAI_NOME%TYPE INDEX BY BINARY_INTEGER;
+        VARIAVEL TIPO;
+    BEGIN
+
+        VARIAVEL(1) := 'OLA';
+        VARIAVEL(2) := 'MUNDO';
+        VARIAVEL(3) := '|';
+
+        DBMS_OUTPUT.PUT_LINE('PRIMEIRO: '||VARIAVEL.FIRST);
+        DBMS_OUTPUT.PUT_LINE('SEGUNDO: '||VARIAVEL(2));
+        DBMS_OUTPUT.PUT_LINE('ULTIMO: '||VARIAVEL.LAST);
+
+        -- VERIFICANDO SE DETERMINADO INDICE EXISTE
+        IF VARIAVEL.EXISTS(2) THEN
+            DBMS_OUTPUT.PUT_LINE('SIM O INDICE EXISTE');
+        END IF;
+
+        -- EXIBINDO A QUANTIDADE DE ELEMENTOS
+        DBMS_OUTPUT.PUT_LINE('QUANTIDADE DE REGISTROS: '||VARIAVEL.COUNT);
+
+        -- EXIBINDO O INDICE ANTERIOR E POSTERIOR AO INFORMADO.
+        DBMS_OUTPUT.PUT_LINE('ANTERIOR AO SEGUNDO INDICE '||VARIAVEL.PRIOR(2)||', E O POSTERIOR '|| VARIAVEL.NEXT(2));
+
+        -- EXCLUINDO E EXIBINDO A QUANTIDADE DE ELEMENTOS
+            VARIAVEL.DELETE(3);
+            DBMS_OUTPUT.PUT_LINE('QUANTIDADE DE REGISTROS AGORA: '||VARIAVEL.COUNT);
+    END;
+
+`[VARIAVEL].FIRST` => Pega o primeiro elemento.
+
+`[VARIAVEL].LAST` => Pega o ultimo elemento.
+
+`[VARIAVEL]([N])` => Pega o *N* elemento, sendo que o `[N]` deve ser substituído por um número.
+
+`[VARIAVEL].EXISTS([N])` => Retorna um valor booleano, dizendo se o índice passado aqui `[N]` existe.
+
+`[VARIAVEL].COUNT` => Informa a quantidade de elementos dentro da tabela criada.
+
+`[VARIAVEL].PRIOR([N])` => retorna o índice anterior ao `[N]`.
+
+`[VARIAVEL].NEXT([N])` => retorna o índice posterior ao `[N]`.
+
+`[VARIAVEL].DELETE([N])` => excluí o elemento `[N]` da tabela, funciona de maneira semelhante ao *slice* dos arrays.
+
+**O tipo de dados deve ser convertido para String, caso você deseja usa-lo para compor uma query, para isso pode ser `|| variavel([N])` ou `to_char(variavel[N]))`, sendo o `[N]` o índice.**
