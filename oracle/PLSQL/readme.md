@@ -828,7 +828,7 @@ O **FETCH** seria o equivalente ao *Iterator*, e funciona de maneira semelhante 
         DBMS_OUTPUT.PUT_LINE([VAR].[COLUNA]);
     CLOSE [CURSOR_NOME];
 
-A cada interação o *FETCH* copula o `[VAR]` adicionando valor a ele, no caso o **FETCH** pegou o primeiro valor, geralmente se usa o **FETCH** dentro de algum laço de repetição, o seu funcionamento é semelhante ao **.next()** dos *iterators*, no caso inicialmente pega o primeiro valor, depois se chamado denovo pega o segundo, se chamado denovo pega o terceiro e por ai vai, no caso como foi chamado apenas uma vez, pega apenas o primeiro. Agora nesse exemplo abaixo pega o primeiro e o segundo:
+A cada interação o *FETCH* copula o `[VAR]` adicionando valor a ele, no caso o **FETCH** pegou o primeiro valor, geralmente se usa o **FETCH** dentro de algum laço de repetição, o seu funcionamento é semelhante ao **.next()** dos *iterators*, no caso inicialmente pega o primeiro valor, depois se chamado denovo pega o segundo, se chamado denovo pega o terceiro e por ai vai, no caso como foi chamado apenas uma vez, pega apenas o primeiro. outra coisa, o `[VAR]` representa a tupla atual da tabela, Agora nesse exemplo abaixo pega o primeiro e o segundo:
 
     DECLARE
         CURSOR SELECAO IS SELECT * FROM BAIRRO;
@@ -841,3 +841,54 @@ A cada interação o *FETCH* copula o `[VAR]` adicionando valor a ele, no caso o
                 DBMS_OUTPUT.PUT_LINE(SEL.BAI_NOME);  
         CLOSE SELECAO;
     END;
+
+### FETCH dentro de LOOP
+
+     OPEN [CURSOR];    
+      LOOP
+        FETCH [CURSOR] INTO [REFERENCIA];
+        EXIT WHEN([REFERENCIA].BAI_CODIGO > 3);
+            DBMS_OUTPUT.PUT_LINE(''||[REFERENCIA].BAI_NOME);        
+      END LOOP;
+    CLOSE [CURSOR];
+
+A maneira mais útil de usar cursores é dentro de um laço, nesse caso você deve iniciar o laço com `LOOP` e encerrar com `END LOOP`, no caso a clausura `EXIT WHEN` determina qual é o critério de saida, no caso seria quando a coluna `BAI_CODIGO` tiver um valor maior que *3*, e ao chegar a esse valor encerra-se o laço, no caso cuidado para não dar um loop infinito, segue abaixo um exemplo mais prático:
+
+    DECLARE
+        CURSOR SELECAO IS SELECT * FROM BAIRRO;
+        SEL SELECAO%ROWTYPE;
+    BEGIN
+        OPEN SELECAO;    
+            LOOP
+                FETCH SELECAO INTO SEL;
+                EXIT WHEN(SEL.BAI_CODIGO > 3);
+                DBMS_OUTPUT.PUT_LINE(''||SEL.BAI_NOME);        
+            END LOOP;
+        CLOSE SELECAO;
+    END;
+
+Também é possível usar os atributos de [SQL%](#sql---básico), porém isso deve ser feito dentro do bloco `OPEN [cursor]` e `CLOSE [cursor];`, exceto o usado para verificar se o cursor está aberto, segue um exemplo:
+
+    DECLARE
+        CURSOR SELECAO IS SELECT * FROM BAIRRO;
+        SEL SELECAO%ROWTYPE;
+    BEGIN
+        OPEN SELECAO;
+            -- LACO DE REPETICAO
+            LOOP
+                FETCH SELECAO INTO SEL;
+                EXIT WHEN(SELECAO%NOTFOUND);
+                DBMS_OUTPUT.PUT_LINE(''||SEL.BAI_NOME);        
+            END LOOP;
+            
+            -- VERIFICANDO SE O CURSOR ESTA ABERTO
+            IF SELECAO%ISOPEN THEN
+                DBMS_OUTPUT.PUT_LINE('CURSOR ABERTO');
+            END IF;           
+            
+            -- CONTANDO REGISTROS
+            DBMS_OUTPUT.PUT_LINE('TEM '||SELECAO%ROWCOUNT||' REGISTROS');
+        CLOSE SELECAO;      
+    END;
+
+No caso percebemos o uso disso aqui `SELECAO%NOTFOUND`, aqui `SELECAO%ISOPEN` e aqui `SELECAO%ROWCOUNT`, lembrando que essa **SELEÇÃO** deve ser o valor informado aqui `CURSOR SELECAO IS SELECT * FROM BAIRRO;` e não aqui `FETCH SELECAO INTO SEL;`, deve-se tomar cuidado para não confundir as coisas, uma vez que o `SQL%` guarda informações sobre a ultima projeção feita e no caso a projeção é salva no cursor conforme visto aqui `CURSOR SELECAO IS SELECT * FROM BAIRRO;` e não na referência ao cursor.
