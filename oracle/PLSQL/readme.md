@@ -19,6 +19,8 @@
 
 09. [O Equivalente a Arrays](#type-table)  
 
+10. [Cursores](#cursor) 
+
 ## Exemplo básico
 
 ### Tabela Bairro
@@ -738,3 +740,45 @@ Para se usar você referência os indices de um array com os parentes, como aqui
 `[VARIAVEL].DELETE([N])` => excluí o elemento `[N]` da tabela, funciona de maneira semelhante ao *slice* dos arrays.
 
 **O tipo de dados deve ser convertido para String, caso você deseja usa-lo para compor uma query, para isso pode ser `|| variavel([N])` ou `to_char(variavel[N]))`, sendo o `[N]` o índice.**
+
+## Cursor
+### SQL% - Básico
+[Documentação](https://docs.oracle.com/cd/B19306_01/appdev.102/b14261/sql_cursor.htm)
+
+    DECLARE 
+        VARIAVEL NUMBER;
+    BEGIN
+        SELECT BAI_CODIGO INTO VARIAVEL FROM BAIRRO WHERE BAI_CODIGO = 1;
+    
+        -- VARIAVEIS DISPONIVEIS APOS QUALQUER PROJECAO.
+        DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT);
+        
+        -- VERIFICANDO SE A CONEXAO ESTA ABERTA.
+        IF SQL%ISOPEN THEN
+            DBMS_OUTPUT.PUT_LINE('ABERTO');
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('FECHADO');
+        END IF;  
+        
+        -- VEFICANDO SE O REGISTRO FOI ENCONTRADO.
+        IF SQL%FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('REGISTRO ENCONTRADO');
+        END IF;    
+    END;
+
+`SQL%ROWCOUNT` => informa quantos registros foram retornados na ultima projeção.
+
+`SQL%ISOPEN` => Verifica se o cursor está aberto, util apenas em uso de cursores.
+
+`SQL%FOUND` => Verifica se a query retornou algum valor, util para o uso com cursores, também tem o que funciona com a lógica oposta, que é o `SQL%NOTFOUND`.
+
+`SQL%BULK_ROWCOUNT` => Um atributo composto projetado para uso com a instrução `FORALL`. Este atributo atua como uma tabela index-by.Seu iésimo elemento armazena o número de linhas processadas pela iésima execução de uma instrução `UPDATE` ou` DELETE`.Se a iª execução não afetar nenhuma linha, `% BULK_ROWCOUNT (i)` retornará zero.
+
+`SQL%BULK_EXCEPTIONS` => Um array associativo que armazena informações sobre quaisquer exceções encontradas por uma instrução `FORALL` que usa a cláusula` SAVE EXCEPTIONS`.Você deve percorrer seus elementos para determinar onde as exceções ocorreram e quais eram.Para cada valor de índice i entre 1 e `SQL% BULK_EXCEPTIONS.COUNT`,` SQL% BULK_EXCEPTIONS (i) .ERROR_INDEX` especifica qual iteração do loop FORALL causou uma exceção.`SQL% BULK_EXCEPTIONS (i) .ERROR_CODE` especifica o código de erro do Oracle que corresponde à exceção.
+
+### Notas
+>Você pode usar atributos de cursor em instruções procedurais, mas não em instruções SQL. Antes que o Oracle abra o cursor SQL automaticamente, os atributos implícitos do cursor retornam NULL. Os valores dos atributos do cursor sempre se referem à instrução SQL executada mais recentemente, onde quer que essa instrução apareça. Pode ser em um escopo diferente. Se você deseja salvar um valor de atributo para uso posterior, atribua-o a uma variável imediatamente.
+
+> Se uma instrução SELECT INTO falhar em retornar uma linha, o PL / SQL levantará a exceção predefinida NO_DATA_FOUND, independentemente de você verificar SQL% NOTFOUND na próxima linha ou não. Uma instrução SELECT INTO que chama uma função de agregação SQL nunca gera NO_DATA_FOUND, porque essas funções sempre retornam um valor ou um NULL. Nesses casos, SQL% NOTFOUND retorna FALSE. % BULK_ROWCOUNT não é mantido para inserções em massa porque isso seria redundante, pois uma inserção típica afeta apenas uma linha. Consulte "Contando Linhas Afetadas por FORALL com o Atributo% BULK_ROWCOUNT".
+
+> Você pode usar os atributos escalares% FOUND,% NOTFOUND e% ROWCOUNT com ligações em massa. Por exemplo,% ROWCOUNT retorna o número total de linhas processadas por todas as execuções da instrução SQL. Embora% FOUND e% NOTFOUND se refiram apenas à última execução da instrução SQL, você pode usar% BULK_ROWCOUNT para inferir seus valores para execuções individuais. Por exemplo, quando% BULK_ROWCOUNT (i) é zero,% FOUND e% NOTFOUND são FALSE e TRUE, respectivamente.
