@@ -36,4 +36,7 @@ Aqui tem um exemplo básico envolvendo formulário no Oracle forms.
 Aqui tem um exemplo de um formulario que se conecta com o banco de dados.
 
 ### 4TRIGGERS
-Exemplo com um formulário customizável
+Exemplo com um formulário customizável.
+
+### 5Mestre_detalhes
+Exemplo envolvendo o conceito de mestre detalhes no Oracle forms.
