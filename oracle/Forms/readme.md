@@ -67,6 +67,25 @@ Nesse exemplo temos componente que executa uma formula, para isso esse component
 Nesse caso, você marca a opção **Resumo** e preencha os campos `Função sumária` com uma função disponível ali, `Bloco sumarizado` com o nome da tabela e o `item Sumariado` é o campo ao qual será usado, no caso será usado como parametro para a função **Contagem** o campo **EMPLOYEE_ID**. ***Porém para que resumo funcione a opção `Consultar todos os registros` conforme ilustrado abaixo, no bloco, ao qual esse componente está inserido e deve estar marcado como `SIM`, do contrário essa função de resumo pode não funcionar, uma vez que essa opção faz com que o bloco execute a query de uma maneira que a função associada a esse resumo possa ser executado.***
 
 ![Consultar todos os registros](./.img/consultar_todos_os_registros.png)
+
+### Relacionamentos
+
+**Você pode montar relacionamentos, ou criando um bloco de dados automaticamente, ou então criando um relacionamento, cuja as propriedades estão ilustradas abaixo:**
+
+![Relacionamentos Exemplos](./.img/relacionamentos_exemplo.png)
+
+### Trigger
+
+É possível adicionar um código **PL/SQL** dentro de uma **trigger**, no caso o mesmo está estruturado seguindo a mesma lógica que em bloco de procedimento qualquer, ou seja, comandos de projeção deve estar dentro de um variável e por ai vai...
+
+![Trigger Exemplo](./.img/trigger_exemplo.png)
+
+Além disso segue uma lista de eventos, ao qual podem ter códigos **PL/SQL** associado:
+
+![Trigger Exemplo](.img/trigger_exemplo_2.png)
+
+
+
 ## Exemplos
 ### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
