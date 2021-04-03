@@ -99,19 +99,64 @@ Porém é valido ressaltar que, se você quiser referênciar o bloco nesse exemp
 ![Variaveis Ponto Notacao](./.img/variaveis_ponto_notacao.png)
 
 #### Sem notação ponto
+
 ![Variaveis Mesmo Bloco](./.img/variaveis_mesmo_bloco.png)
+
+### Alertas Básico
+Através do item *alertas* dentro do módulo, ali você organiza todas as suas janelas modais, o mesmo tem uma propriedade que pode ser definida no categoria funcional nas propriedades dela. No caso para chamar-las você deve fazer através de um evento, como por exemplo:
+
+    DECLARE
+	    valor_simples number;
+    BEGIN
+	    valor_simples := show_alert('modal_simples');	
+    END;
+
+Você usa a função `show_alert` para isso e passa como argumento em formato de *string* o nome da modal que se encontra na parte de alertas dentro do módulo, nesse exemplo o nome é *modal_simples*. Além disso como esse comando projeta algo na tela, o valor deve obrigatóriamente ser armazenda em uma variável numérica, conforme o ilustrado e com base nesse resultado que você fará a sua lógica.
+
+![Alert Exemplo Basico](.img/alert_exemplo_basico.png)
+
+### Alertas com Opções
+
+Aqui temos um exemplo mais complexo, aonde o valor do botão é armazenado e comparado para ver botão o usuário pressionou.
+
+    DECLARE
+        alerta_3btn number;
+    BEGIN
+        alerta_3btn := show_alert('modal_botoes');
+        if alerta_3btn = alert_button1 then
+            message('OPCAO 1 SELECIONADA');
+        elsif alerta_3btn = alert_button2 then
+            message('OPCAO 2 SELECIONADA');
+        else
+            message('OPCAO 3 SELECIONADA');
+        end if;
+    END;
+
+![Alert Exemplo Opções](.img/alert_exemplo_opcoes.png)
+#### alert_button
+Caso pressionado o primeiro botão esse valor é ativado `alert_button1`, caso o segundo `alert_button2`, terceiro `alert_button3`.
+
+#### message
+
+Exibe a mensagem no canto da aplicação demonstrado abaixo:
+
+![Message Aqui](.img/message_aqui.png)
+
 ## Exemplos
-### 1Basico
+##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
 
-### 2Canvas
+##### 2Canvas
 Aqui tem um exemplo básico envolvendo formulário no Oracle forms.
 
-### 3Formulario
+##### 3Formulario
 Aqui tem um exemplo de um formulario que se conecta com o banco de dados.
 
-### 4TRIGGERS
+##### 4TRIGGERS
 Exemplo com um formulário customizável.
 
-### 5Mestre_detalhes
+##### 5Mestre_detalhes
 Exemplo envolvendo o conceito de mestre detalhes no Oracle forms.
+
+##### 6funcoes_resumos
+Exemplos envolvendo *funcoes e resumos* no *Oracle Forms*.
