@@ -142,6 +142,60 @@ Exibe a mensagem no canto da aplicação demonstrado abaixo:
 
 ![Message Aqui](.img/message_aqui.png)
 
+### LOV - List Of Values
+
+![Lov Registro](./.img/lov_registro.png)
+
+###### Tabela cliente de exemplo
+    CREATE TABLE CLIENTE(CODIGO INT PRIMARY KEY,NOME VARCHAR(100) NOT NULL, UF CHAR(2));
+
+#### Explicando
+Os *Lovs* seriam uma abreviação de `list of values` e os mesmos trabalham em conjunto com os registros, no caso os `Lovs` estão agrupados no grupo de mesmo nome e os registros estão em **Grupos de registros**, conforme ilustrado acima. Os registros faz a comunicação com os dados, podendo ser estáticos e pré-definidos ou dinâmicos e consequêntemente oriunda do banco de dados, ao passo que os LOVS faz é o componente em si, que estará acessível para intereção com o usuário, caso o menu padrão esteja habilitado, indo em editar e exibir lista, caso o componente esteja selecionado, porém apenas componentes *LOV* devidamente registrados, deverão exibir alguma lista e isso você pode perceber analisando a imagem abaixo:
+
+![LOV Mensagem Rodapé](./.img/lov_mensagem_rodape.png)
+
+Ou seja uma lista de valor tem algo como **lista de valor** escrito no rodapé, conforme descrito acima e uma vez que esse componente esteja selecionado...
+
+###### Exibindo lista do lov
+![Exibir Lista LOV](./.img/lov_exibir_lista.png)
+
+**E então, uma vez selecionado o elemento e a lista temos:**
+###### Exibindo LOV Final e funcionando
+![Lov Lista Exemplo](./.img/lov_lista_exemplo.png)
+
+Sendo curto e grosso: o conteúdo da lista é feito pelo registro e o componente, é responsabilidade do *LOV*. Ou seja se precisar editar, usa-se o registro e se quiser editar o componente, procure no *LOV*.
+
+#### Registro Estático
+
+![Registro Edição](./.img/lov_registro_edicao.png)
+
+**Da esquerda para a direita a sequência da imagem!**. Ao selecionar um registro do grupo e ir a sua propriedade, algumas opções podem ser configuradas. Primeiro é o nome, como ele será identificado, e após isso no funcional temos o tipo se é estático, ou se é dinâmico através do campo **tipo de grupo de dados** e por fim a especificação de colunas, que como nesse caso é estático, abre a especificação da coluna, ao qual você deve definir o nome da coluna, abaixo, o tipo de dados, e o tamanho, lembrando que esse valor, deve bater com o campo na tabela, caso o mesmo seja usada para preencher um campo do tipo *enum*, que no caso é a principal utilidade disso, preencher de maneira prática um campo com dados pré-definidos e por fim em valores de coluna, você deve informar as opções que o usuário pode escolher.
+
+#### Configurando no LOV
+
+![Lov Lovs Edição](./.img/lov_lovs_edicao.png)
+
+**Indo novamente da esquerda para a direita na imagem.** Ao selecionar um *LOV*, e indo nas propriedades, temos três campos que devem ser observados, o primeiro é o nome, que é como o componente deve ser enxergado na lista, depois o *título*, que é  a barra de *título* que deve aparecer na janela que contém a lista de ítens ao qual o usuário deve interagir, depois em `grupo de registros`, você deve informar, qual registro que será usado, ou seja é aqui que você deve relacionar o registro com o *LOV* e por fim em `Propriedades de Mapeamento de Coluna`, será informado ao *LOV*, como o mesmo deve proceder com o registro, no caso qualquer má configuração aqui ou a ausência de, influência no funcionamento, ou na falta de funcionamento do componente. Ao abrir o modal, aonde está `nomes de coluna`, você deve informar todas as colunas do registro, e sim, pode ter mais de uma e isso você define no registro. No `retornar Item`, você informa a coluna na tabela, ao qual está relacionada. Nesse exemplo a tabela é `Cliente` e o campo que deve receber o valor dessa *LOV* é o campo `UF`, por isso `Cliente.UF`, que é uma notação ponto entre tabela e coluna. Por fim a largura em pixels que terá essa coluna, e por fim o nome da coluna que será exibido ao usuário e como resultado final você terá [isso. Compare o que foi definido aqui com essa imagem, clicando aqui para entender melhor.](#exibindo-lov-final-e-funcionando).
+
+#### Associando o LOV a um ítem
+
+![LOV Propriedade](./.img/lov_propriedade.png)
+
+Uma vez que o lov esteja configurado, você deve associar-lo a um ítem, esse ítem vai receber o valor do *LOV* e passa-lo para o banco de dados. No caso esse ítem pode ou não corresponder a um ítem no banco de dados, ele seria como se fosse o *select* do HTML e ele irá disparar o *lov* que permitirá o usuário alterar o seu valor através de uma lista de opções, para associar-lo a um *lov*, na categoria `Lista de valores`, dentro de `Lista de Valores LOV`, selecione o LOV relacionado a esse componente e pronto, tudo funcionará.
+### Chamando o ítem Lov ao clicar no botão
+
+![Lov CTA](./.img/lov_cta.png)
+
+Abaixo a trigger definida a esse botão, quando clicado:
+
+    go_item('uf');
+    list_values;
+
+### go_item
+O `go_item` é uma função que seleciona um ítem, como se o usuário tivesse clicado nele, ele seria uma espécie de método *focus* se fossemos comparar com um elemento *DOM*, ou seja, ele foca em um ítem, nesse exemplo acima, no ítem de *UF*, que está relacionado com essa *LOV* do exemplo.
+
+### list_values;
+Esse procedimento basicamente chama a lista, se o componente for um componente com lista de valor, deve-se exibir a *lov* associado a ele, como [visto aqui](#exibindo-lista-do-lov).
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
