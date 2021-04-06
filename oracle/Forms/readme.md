@@ -192,10 +192,10 @@ Abaixo a trigger definida a esse botão, quando clicado:
     list_values;
 
 ### go_item
-O `go_item` é uma função que seleciona um ítem, como se o usuário tivesse clicado nele, ele seria uma espécie de método *focus* se fossemos comparar com um elemento *DOM*, ou seja, ele foca em um ítem, nesse exemplo acima, no ítem de *UF*, que está relacionado com essa *LOV* do exemplo.
+O `go_item` é uma função que seleciona um ítem, como se o usuário tivesse clicado nele, ele seria uma espécie de método *focus* se fossemos comparar com um elemento *DOM*, ou seja, ele foca em um ítem, nesse exemplo acima, no ítem de *UF*, que está relacionado com essa *LOV* do exemplo. Resumindo, essa função recebe um argumento e o argumento deve ser o ítem relacionado com a *lov* que você deseja selecionar.
 
 ### list_values;
-Esse procedimento basicamente chama a lista, se o componente for um componente com lista de valor, deve-se exibir a *lov* associado a ele, como [visto aqui](#exibindo-lista-do-lov).
+Esse procedimento basicamente chama a lista, se o componente for um componente com lista de valor, deve-se exibir a *lov* associado a ele, como [visto aqui](#exibindo-lista-do-lov). Na prática trata-se de uma macro para executar a lista de lov associado ao ítem selecionado, caso o ítem seja um ítem relacionado a uma lista lov, essa é a forma de exibir o menu de opções sem que o usuário precise clicar em `Editar > Exibir lista`, essa procedure faz o equivalente a essa ação com o ítem selecionado.
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
@@ -217,3 +217,6 @@ Exemplos envolvendo *funcoes e resumos* no *Oracle Forms*.
 
 ##### 7Alertas
 Exemplos envolvendo janelas modais.
+
+##### 8Lovs
+Exemplo básico envolvendo uma *LOV* com registros estático.
