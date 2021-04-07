@@ -175,7 +175,7 @@ Sendo curto e grosso: o conteúdo da lista é feito pelo registro e o componente
 
 ![Lov Lovs Edição](./.img/lov_lovs_edicao.png)
 
-**Indo novamente da esquerda para a direita na imagem.** Ao selecionar um *LOV*, e indo nas propriedades, temos três campos que devem ser observados, o primeiro é o nome, que é como o componente deve ser enxergado na lista, depois o *título*, que é  a barra de *título* que deve aparecer na janela que contém a lista de ítens ao qual o usuário deve interagir, depois em `grupo de registros`, você deve informar, qual registro que será usado, ou seja é aqui que você deve relacionar o registro com o *LOV* e por fim em `Propriedades de Mapeamento de Coluna`, será informado ao *LOV*, como o mesmo deve proceder com o registro, no caso qualquer má configuração aqui ou a ausência de, influência no funcionamento, ou na falta de funcionamento do componente. Ao abrir o modal, aonde está `nomes de coluna`, você deve informar todas as colunas do registro, e sim, pode ter mais de uma e isso você define no registro. No `retornar Item`, você informa a coluna na tabela, ao qual está relacionada. Nesse exemplo a tabela é `Cliente` e o campo que deve receber o valor dessa *LOV* é o campo `UF`, por isso `Cliente.UF`, que é uma notação ponto entre tabela e coluna. Por fim a largura em pixels que terá essa coluna, e por fim o nome da coluna que será exibido ao usuário e como resultado final você terá [isso. Compare o que foi definido aqui com essa imagem, clicando aqui para entender melhor.](#exibindo-lov-final-e-funcionando).
+**Indo novamente da esquerda para a direita na imagem.** Ao selecionar um *LOV*, e indo nas propriedades, temos três campos que devem ser observados, o primeiro é o nome, que é como o componente deve ser enxergado na lista, depois o *título*, que é  a barra de *título* que deve aparecer na janela que contém a lista de ítens ao qual o usuário deve interagir, depois em `grupo de registros`, você deve informar, qual registro que será usado, ou seja é aqui que você deve relacionar o registro com o *LOV* e por fim em `Propriedades de Mapeamento de Coluna`, será informado ao *LOV*, como o mesmo deve proceder com o registro, no caso qualquer má configuração aqui ou a ausência de, influência no funcionamento, ou na falta de funcionamento do componente. Ao abrir o modal, aonde está `nomes de coluna`, você deve informar todas as colunas do registro, e sim, pode ter mais de uma e isso você define no registro. No `retornar Item`, você o ítem do bloco de dados, ao qual está relacionada, ou seja é nesse campo que você informa aonde o *LOV* deve jogar o valor pego, ou seja aqui você informa o componente relacionado ao ítem. Nesse exemplo a tabela é `Cliente` e o campo que deve receber o valor dessa *LOV* é o campo `UF`, por isso `Cliente.UF`, que é uma notação ponto entre tabela e coluna. Por fim a largura em pixels que terá essa coluna, e por fim o nome da coluna que será exibido ao usuário e como resultado final você terá [isso. Compare o que foi definido aqui com essa imagem, clicando aqui para entender melhor.](#exibindo-lov-final-e-funcionando).
 
 #### Associando o LOV a um ítem
 
@@ -196,6 +196,18 @@ O `go_item` é uma função que seleciona um ítem, como se o usuário tivesse c
 
 ### list_values;
 Esse procedimento basicamente chama a lista, se o componente for um componente com lista de valor, deve-se exibir a *lov* associado a ele, como [visto aqui](#exibindo-lista-do-lov). Na prática trata-se de uma macro para executar a lista de lov associado ao ítem selecionado, caso o ítem seja um ítem relacionado a uma lista lov, essa é a forma de exibir o menu de opções sem que o usuário precise clicar em `Editar > Exibir lista`, essa procedure faz o equivalente a essa ação com o ítem selecionado.
+
+### Grupos de registros dinâmicos
+
+![Lov Auto Registro](./.img/lov_auto_registro.png)
+
+Você pode também definir que os registros sejam carregados de maneira dinâmica e isso ocorre com base em um comando **select**, nesse caso todas as colunas estão sendo pegas, logo a configuração do **LOV** deve ser compatível com isso.
+
+### Configurando o LOV para registros com N colunas
+
+![Lov Auto Lovs](.img/lov_auto_lovs.png)
+
+No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo dela.
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
