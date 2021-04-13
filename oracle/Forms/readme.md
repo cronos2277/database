@@ -208,6 +208,32 @@ Você pode também definir que os registros sejam carregados de maneira dinâmic
 ![Lov Auto Lovs](.img/lov_auto_lovs.png)
 
 No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo dela.
+
+### Mascara e validação
+###### Tabela Exemplo
+    CREATE TABLE pessoa (codigo int primary key, nome varchar(100) not null, sexo char(1), data_nasc date, data_cadas date, cpf varchar(20), fumante number(1,0));
+
+###### Inserindo registros básicos
+    INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (1,'Joao', 'M','07/07/1990',0);
+    INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (2,'Maria', 'F','14/05/1992',0);
+    INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (3,'Pedro', 'M','13/12/1994',1);
+    INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (4,'Julia', 'F','22/02/1989',1);
+    INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (5,'Marcos', 'M','29/03/1976',0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
