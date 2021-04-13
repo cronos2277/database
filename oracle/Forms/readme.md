@@ -221,19 +221,21 @@ No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo del
     INSERT INTO PESSOA (codigo,nome,sexo,data_nasc,fumante) values (5,'Marcos', 'M','29/03/1976',0);
 
 
+#### Mascara de formato
 
+**No campo `Mascara de formato` é um campo que você deve informar o formato da máscara pelos dados, ou seja como ele deve ser exibido, no campo `Dados`. Quando selecionado o campo, assim que você pressionar a tecla `F1` você pode ver mais opções de mascará que podem ser usado, as máscaras aqui servem tanto para formatar exibição, como para definir restrições para inserção de dados.**
 
+![mascara Campo](./.img/mascara_campo.png)
 
+#### Checkbox
 
+**Se você quiser usar um ítem de checkbox, no campo `tipo de ítem` você deve selecionar a opção `Caixa de Seleção`, além disso você deve selecionar na Guia funcional um valor para quando está marcado o checkbox ou desmarcado, no caso quando marcado o valor do campo fica em `1` e quando desmarcado fica em `0`.**
 
+![Checkbox](.img/checkbox_1.png)
 
+**A configuração é feita extamente como em um campo de texto, ou seja se ele reflete o campo, deve ser configurado como um campo do banco de dados, se não, isso deve ficar explícito.**
 
-
-
-
-
-
-
+![Checkbox](.img/checkbox_1.png)
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
