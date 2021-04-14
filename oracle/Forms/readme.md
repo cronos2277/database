@@ -256,6 +256,44 @@ No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo del
 **Você pode criar um campo de senha, ao qual esconde os valores digitados abaixo, conforme visto abaixo. Para isso o `tipo de ítem` deve ser `ítem de texto` e em funcional a opção `ocultar dados` deve estar marcado para sim.**
 
 ![Senha](./.img/senha.png)
+
+
+### Menus
+
+![Menu 1](.img/menu_1.png)
+
+**Essa parte é a referente ao menu, no caso são necessário fazer 3 coisas: Primeiro, você precisa adicionar o menu ao módulo, segundo o menu deve obrigatóriamente ter pelos menos um ítem e os ítens deve ter um módulo associado, terceiro selecionar o menu, compilar, quarto, colocar o arquivo compilado em uma pasta que o form builder tem como path, na mensagem de erro ele vai demonstrar qual é esse diretório. Sem essas 5 condições o menu não deve funcionar.**
+
+#### Adicionando o menu ao módulo
+
+Se estiver escrito conforme a imagem ilustrada `DEFAULT&SMARTBAR`, isso significa o menu padrão do *form*, para alterar isso basta informar o nome de seu menu nesse campo, no caso `Menu`
+
+![Menu 2](.img/menu_2.png)
+
+#### Compilando
+
+**Você deve compilar esse menu.**
+
+![Menu 3](.img/menu_3.png)
+
+#### Arquivo Compilado
+
+**O arquivo que tem um check em vermelho é o arquivo compilado, ao qual o módulo irá carregar, coloque-o no diretório do seu Form Builder.**
+
+![Menu 4](.img/menu_4.png)
+
+#### Informando no módulo
+
+**Agora você deve informar qual menu o módulo deve carregar, no caso ele vai procurar pelo arquivo compilado com o mesmo nome**.
+
+![Menu 5](./.img/menu_5.png)
+
+#### Sobre ítens
+
+**Todos os menus e sub-menus devem ter pelo menos um ítem e todos os ítens devem ter o seu respectivo código plsql, na verdade um ítem de menu é um gatilho para procedimentos.**
+
+![Menu 5](./.img/menu_5.png)
+
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
