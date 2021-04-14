@@ -292,7 +292,7 @@ Se estiver escrito conforme a imagem ilustrada `DEFAULT&SMARTBAR`, isso signific
 
 **Todos os menus e sub-menus devem ter pelo menos um ítem e todos os ítens devem ter o seu respectivo código plsql, na verdade um ítem de menu é um gatilho para procedimentos.**
 
-![Menu 5](./.img/menu_5.png)
+![Menu 6](./.img/menu_6.png)
 
 ## Exemplos
 ##### 1Basico
