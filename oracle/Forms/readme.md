@@ -250,6 +250,12 @@ No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo del
 **Aqui você define o valor, que será passado ao grupo no qual essa opção está inserida e esse container irá gravar no banco de dados, ou seja, um ítem de radio tem valor mas não faz a conexão com o banco de dados e sim com o container de radio, que é o `radio group`. Em `label` você definir um texto para o usuário saber do que a opção se trata e no campo `valor do botão de opção`, ao qual vai conter o valor a ser passado para o `radio group` e que por sua vez grava no banco de dados.**
 
 ![Radio Item](.img/radio_item.png)
+
+### Senha
+
+**Você pode criar um campo de senha, ao qual esconde os valores digitados abaixo, conforme visto abaixo. Para isso o `tipo de ítem` deve ser `ítem de texto` e em funcional a opção `ocultar dados` deve estar marcado para sim.**
+
+![Senha](./.img/senha.png)
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
