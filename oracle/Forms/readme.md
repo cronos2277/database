@@ -236,6 +236,20 @@ No caso desse mapeamento, você deve informar o nome de cada coluna e o alvo del
 **A configuração é feita extamente como em um campo de texto, ou seja se ele reflete o campo, deve ser configurado como um campo do banco de dados, se não, isso deve ficar explícito.**
 
 ![Checkbox](.img/checkbox_1.png)
+
+#### Radio Button
+
+##### Radio Group
+
+**Se você for trabalhar com radio, você precisa criar um `radio group` que sirvirá como uma espécie de `container` de groups, para isso dentro de `tipo de item`, deve estar marcado `grupo de radio`, além disso é justamente esse componente que faz a ligação com o bancos de dados e é aqui que você deve definir a tabela e a coluna da tabela. Além disso esse grupo deve ter obrigatóriamente um valor inicial, para quando não houver nenhum `radio` selecionado.**
+
+![Radio Group](.img/radio_group.png)
+
+##### Ítem de Radio
+
+Aqui você define o valor, que será passado ao grupo no qual essa opção está inserida e esse container irá gravar no banco de dados, ou seja, um ítem de radio tem valor mas não faz a conexão com o banco de dados e sim com o container de radio, que é o `radio group`. Em `label` você definir um texto para o usuário saber do que a opção se trata e no campo `valor do botão de opção`, ao qual vai conter o valor a ser passado para o `radio group` e que por sua vez grava no banco de dados.
+
+![Radio Item](.img/radio_item.png)
 ## Exemplos
 ##### 1Basico
 Aqui tem um exemplo de calculadora básica que executa as quatro operações principais, com um formulário feito no Oracle forms.
