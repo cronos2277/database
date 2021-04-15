@@ -54,3 +54,39 @@ Através desse assistente acima, é possível criar um relatório de maneira aut
         <p>Aqui você define o visual da tabela, você também pode carregar algum visual se for o caso.</p>
     </div>    
 </div>
+
+## Modo Papel
+
+Conforme visto abaixo, é possível definir, para isso, clique com o botão direito em `Layout de Papel` **>** `editor de Relatório`.
+
+![Papel 1](.img/papel_1.png)
+
+### Modos de visialização
+
+![Papel 2](.img/papel_modo_visualizacao.png)
+
+Da esquerda a direita: `Modelo de dados`, `Fonte da Web`, `Layout de Papel`, `Projeto de Papel`, `Form com parametros de papel`
+
+#### Os modos mais relevantes
+`Fonte da Web` => permite a edição do documento através da linguagem **JSP**. Como no exemplo abaixo:
+
+![JSP](.img/papel_jsp.png)
+
+`Layout de papel` => Permite fazer a edição do título e dos dados, no caso aqui é possível arrumar a posição do título.
+
+![Papel Layout view](.img/papel_layout_view.png)
+
+`Projeto de Papel` => Parecido com o `Layout de Papel`, porém exibe os dados e permite ver como está ficando.
+
+![Modo de Papel](.img/papel_projeto_de_papel.png)
+### Flex
+
+![Flex](.img/papel_modo_flex.png)
+
+**Fique atento a isso, aqui você ativa ou desativa o modo flex, se ativado a movimentação de ítens pode ficar engessado, fazendo com que a movimentação ocorra sempre em grupo.**
+
+### Visualização a esquerda
+
+**Aqui você pode ver todos os elementos que compõe o layout acima e assim como no `form builder` você pode selecionar a propriedade apertando `F4` ou indo nas propriedades e editando-as.**
+
+![Papel Layout](.img/papel_layout.png)
