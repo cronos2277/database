@@ -20,6 +20,9 @@
 10.[Tabela Temporária](#tabela-temporaria)
 
 11.[Oracle Forms](Forms)
+
+12.[Oracle Reports](Report)
+
 ## SQL Plus
 ### Comandos
 Esses comandos funciona apenas no *SQLPLUS*, ou seja essas aplicações podem funcionar ou não em uma ferramenta, mas no SQL Plus funciona, além disso se faz necessário executar o comando `COMMIT` para que as alterações sejam salvas, salvo se o autocommit estiver habilitado, algo que **NÃO** é padrão no **Oracle DB**.
